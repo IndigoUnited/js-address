@@ -65,8 +65,8 @@ Destroys the instance.
 
 The tests are built on top of [mocha](http://visionmedia.github.com/mocha/) test framework and the [expect.js](https://github.com/LearnBoost/expect.js) assert library.
 
-Be sure to pull out the vendors with `git submodule update --init`.
-To run them simply open the `test/tester.html` file in the browser.
+First run `npm install` and `bower install` to install all the tools needed.
+Then simply open the `test/tester.html` file in the browser.
 Beware that the HTML5 tests won't run in the file:// protocol.
 
 
