@@ -7,7 +7,6 @@
         <script src="../node_modules/mocha/mocha.js"></script>
         <script src="../node_modules/expect.js/expect.js"></script>
         <script src="../node_modules/requirejs/require.js"></script>
-        <script src="util/adapter.js"></script>
         <script>
             var options = {
                 ui: 'bdd',
@@ -21,17 +20,9 @@
                 options.globals.push('getInterface');   // Sometimes Firefox exposes a getInterface global.. I think it's Firebug
             }
 
-
             mocha.setup(options);
 
-            require(['base-adapter/dom/Utilities'], function (Utilities) {
-                Utilities.ready(function () {
-                    require(['./test'], function () {
-                        mocha
-                        .run();
-                    });
-                });
-            });
+            require(['./test']);
         </script>
         <style>
         #test-link {

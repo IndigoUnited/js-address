@@ -1,8 +1,8 @@
 {
     "predef": [
+        "console",
         "define",
         "require",
-        "console",
         "expect",
         "it",
         "describe",
@@ -10,9 +10,8 @@
         "beforeEach",
         "after",
         "afterEach",
-        "__dirname",
-        "global",
-        "process"
+        "mochaPhantomJS",
+        "mocha"
     ],
 
     "browser": true,

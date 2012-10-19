@@ -25,12 +25,13 @@ define([
     'dejavu/AbstractClass',
     './AddressInterface',
     'events-emitter/MixableEventsEmitter',
+    'has',
     'amd-utils/string/escapeRegExp',
     'amd-utils/string/startsWith',
     'amd-utils/object/mixIn',
     'amd-utils/lang/isFunction',
     'base-adapter/dom/Events'
-], function (AbstractClass, AddressInterface, MixableEventsEmitter, escapeRegExp, startsWith, mixIn, isFunction, Events) {
+], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, mixIn, isFunction, Events) {
 
     'use strict';
 
@@ -47,7 +48,8 @@ define([
         _destroyed: false,
 
         _options: {
-            handleLinks: true             // This can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
+            handleLinks: true,             // This can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
+            debug: false
         },
 
         /**
@@ -70,7 +72,9 @@ define([
             // Grab the current value
             this._value = this._readValue();
 
-            console.info('Initial address value: ' + this._value);
+            if (has('debug')) {
+                console.info('Initial address value: ' + this._value);
+            }
 
             // Listen to clicks in links
             if (this._options.handleLinks) {
@@ -245,16 +249,20 @@ define([
                 // If the link is internal, then we just prevent default behaviour
                 if (rel === 'internal') {
                     event.preventDefault();
-                    console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+                    if (has('debug')) {
+                        console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+                    }
                 } else {
                     //  Check if the link is from another domain/protocol and if we can handle it
                     if (this._onNewValueByLinkClick(url)) {
                         event.preventDefault();
                     } else {
-                        console.info('Link poiting to "' + url + '" was automatically interpreted as external.');
+                        if (has('debug')) {
+                            console.info('Link poiting to "' + url + '" was automatically interpreted as external.');
+                        }
                     }
                 }
-            } else {
+            } else if (has('debug')) {
                 console.info('Link poiting to "' + url + '" was ignored.');
             }
         }.$bound(),
@@ -266,7 +274,9 @@ define([
          * @param {String} value The current value
          */
         _fireInternalChange: function (value) {
-            console.info('Value changed to ' + value + ' (internally)');
+            if (has('debug')) {
+                console.info('Value changed to ' + value + ' (internally)');
+            }
 
             this._emit(this.$static.EVENT_INTERNAL_CHANGE, value);
             // Check if the value changed meanwhile..
@@ -284,7 +294,9 @@ define([
          * @param {String} value The current value
          */
         _fireExternalChange: function (value) {
-            console.info('Value changed to ' + value + ' (externally)');
+            if (has('debug')) {
+                console.info('Value changed to ' + value + ' (externally)');
+            }
 
             this._emit(this.$static.EVENT_EXTERNAL_CHANGE, value);
             // Check if the value changed meanwhile..
@@ -302,7 +314,9 @@ define([
          * @param {String} value The current value
          */
         _fireLinkChange: function (value) {
-            console.info('Value changed to ' + value + ' (link)');
+            if (has('debug')) {
+                console.info('Value changed to ' + value + ' (link)');
+            }
 
             this._emit(this.$static.EVENT_LINK_CHANGE, value);
             // Check if the value changed meanwhile..
