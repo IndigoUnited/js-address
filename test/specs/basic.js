@@ -124,7 +124,7 @@ define([
 
                 before(function () {
                     // Do a long running ajax call because Safari is known to not fire popstate and hashchange(?) events if a network connection is in progress
-                    doLongRunningRequest();
+                    //doLongRunningRequest();
                 });
 
                 after(function () {
@@ -181,7 +181,7 @@ define([
             describe('AddressHTML5 (basePath: ' + (!options.basePath && options.basePath !== '' ? originalPathname + '/' : options.basePath) + ')', function () {
                 before(function () {
                     // Do a long running ajax call because Safari is known to not fire popstate and hashchange(?) events if a network connection is in progress
-                    doLongRunningRequest();
+                    //doLongRunningRequest();
                 });
 
                 beforeEach(function () {

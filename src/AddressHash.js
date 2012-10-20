@@ -97,7 +97,8 @@ define(['./Address', 'base-adapter/dom/Events'], function (Address, Events) {
                 // Also IE in file protocol totally messes up when back & forward are clicked
                 var docMode = document.documentMode;
 
-                return ('onhashchange' in window && (docMode == null || docMode > 7) && (navigator.userAgent.indexOf('MSIE') === -1 || location.protocol !== 'file:'));
+                return ('onhashchange' in window && (docMode == null || docMode > 7) &&
+                       (navigator.userAgent.indexOf('MSIE') === -1 || location.protocol !== 'file:'));
             },
 
             /**

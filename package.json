@@ -7,6 +7,7 @@
         "requirejs": "2.0.x",
         "phantomjs": "0.2.x",
         "mocha-phantomjs": "git://github.com/metaskills/mocha-phantomjs.git",
+        "http-server": "0.5.x",
         "base-adapter-libs": "git+ssh://git@github.com:IndigoUnited/base-adapter-libs.git"
     },
     "scripts": {

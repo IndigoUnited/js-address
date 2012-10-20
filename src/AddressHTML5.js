@@ -20,7 +20,6 @@ define([
         $name: 'AddressHTML5',
 
         _basePath: null,
-        _endsWithSlash: false,
         _baseElement: null,     // This is to solve a weird opera bug
         _emptyObj: {},
         _emptyStr: '',
@@ -43,11 +42,6 @@ define([
             // Encode it to be valid in the comparisons because it can contain special chars
             this._basePath = this._encodeValue(this._basePath);
             this._basePath = '/' + this._trimLeadingSlashes(this._basePath);
-            if (!endsWith(this._basePath, '/')) {
-                this._basePath = this._basePath + '/';
-            } else {
-                this._endsWithSlash = true;
-            }
 
             this._baseElement = document.getElementsByTagName('base');
 
@@ -159,7 +153,7 @@ define([
                 }
             }
 
-            return decodeURIComponent(this._endsWithSlash ? path : '/' + path);
+            return decodeURIComponent(path);
         },
 
         /**
@@ -217,11 +211,16 @@ define([
                 // Safari < 6 has horrible problems with pushState
                 // - e.g.: location.href returns the decoded value instead of the value we used in the pushState
                 // - e.g.: not firing popstate on network busy
-                // So we assume that is not compatible for Safari.. once its decently implemented, we should return false only for older versions
+
+                // The same applies to PhantomJS (http://code.google.com/p/phantomjs/issues/detail?can=2&start=0&num=100&q=&colspec=ID%20Type%20Status%20Priority%20Milestone%20Owner%20Summary&groupby=&sort=&id=833)
 
                 // The file protocol is not supported so we return false for it.
 
-                return window.history !== undefined && !!history.pushState && location.protocol !== 'file:' && (!Platform.isAndroid() || Platform.getVersion() >= 4) && (!Browser.isSafari() || Browser.getVersion() >= 6);
+                return window.history !== undefined && !!history.pushState &&
+                       location.protocol !== 'file:' &&
+                       (!Platform.isAndroid() || Platform.getVersion() >= 4) &&
+                       (!Browser.isSafari() || Browser.getVersion() >= 6) &&
+                       (Browser.getName() !== 'phantomjs');
             },
 
             /**

@@ -1,27 +1,35 @@
-/*jshint node:true, strict:false*/
+/*jshint node:true, strict:false, onevar:false*/
 
 if (!(typeof window !== 'undefined' && window.navigator && window.document)) { // Test if we are at command line
-    var fs = require('fs');
-    var cp = require('child_process');
+    var fs           = require('fs');
+    var cp           = require('child_process');
+    var createServer = require('http-server').createServer;
 
-    var phantomjsBin = __dirname + '/../node_modules/.bin/phantomjs';
-    var command = phantomjsBin + ' --web-security=no ' + __dirname + '/../node_modules/mocha-phantomjs/lib/mocha-phantomjs.coffee ' + 'test/tester.html';
-    var tests;
+    // Start an HTTP Server to serve the files
+    // This is needed because some tests fail intentionally in the file protocol
 
-    fs.stat(phantomjsBin, function (error) {
-        if (error) {
-            phantomjsBin = 'phantomjs';
-        }
+    var server = createServer({ root: __dirname + '/../' });
+    server.listen(8081, '0.0.0.0', function () {
+        var phantomjsBin = __dirname + '/../node_modules/.bin/phantomjs';
+        var command = phantomjsBin + ' ' + __dirname + '/../node_modules/mocha-phantomjs/lib/mocha-phantomjs.coffee ' + 'http://localhost:8081/test/tester.html';
+        var tests;
 
-        if (process.platform === 'win32') {
-            tests = cp.spawn('cmd', ['/s', '/c', command], { customFds: [0, 1, 2] });
-        } else {
-            tests = cp.spawn('sh', ['-c', command], { customFds: [0, 1, 2] });
-        }
-        tests.on('exit', function (code) {
-            process.exit(code ? 1 : 0);
+        fs.stat(phantomjsBin, function (error) {
+            if (error) {
+                phantomjsBin = 'phantomjs';
+            }
+
+            if (process.platform === 'win32') {
+                tests = cp.spawn('cmd', ['/s', '/c', command], { customFds: [0, 1, 2] });
+            } else {
+                tests = cp.spawn('sh', ['-c', command], { customFds: [0, 1, 2] });
+            }
+            tests.on('exit', function (code) {
+                process.exit(code ? 1 : 0);
+            });
         });
     });
+
 } else {
     var paths = {
         'amd-utils': '../components/amd-utils/src',
