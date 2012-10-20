@@ -56,17 +56,6 @@ define([
             }
         ];
 
-    // Add a dummy console if not available (IE)
-    if (!window.console) {
-        window.console = {
-            log: function () {},
-            info: function () {},
-            error: function () {},
-            warn: function () {},
-            debug: function () {}
-        };
-    }
-
     function doLongRunningRequest() {
         if (!jqxhr) {
 
@@ -153,7 +142,6 @@ define([
             });
         } else {
             alert('AddressHash is not compatible with this environment.. are you running IE older than 8 or in the file protocol?');
-
             testAddressHTML5();
         }
     }
@@ -214,6 +202,9 @@ define([
                     history.pushState({}, '', originalPathname);   // Restore the initial state to be easier to refresh
                 });
             });
+        } else {
+            console.log('');
+            console.warn('The current environment is not compatible with HTML5');
         }
     }
 
