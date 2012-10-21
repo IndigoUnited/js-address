@@ -99,7 +99,7 @@ Aditionally you have to specify the following map:
 
 ```js
     map: {
-        'base-adapter': {
+        '*': {
             'base-adapter/src': '../vendor/base-adapter/src'
         }
     },
