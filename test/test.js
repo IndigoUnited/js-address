@@ -36,28 +36,22 @@ if (!(typeof window !== 'undefined' && window.navigator && window.document)) { /
         'dejavu': '../components/dejavu/dist/amd/strict',
         'events-emitter': '../components/events-emitter/src',
         'base-adapter': '../components/base-adapter/src/adapters/jquery',
-        'base-adapter/src': '../components/base-adapter/src',              // This is needed in order to access the triggerEvent utility for the tests..
+        'base-adapter/src': '../components/base-adapter/src',
         'jquery': '../node_modules/base-adapter-libs/jquery/jquery',
         'has': '../components/has/has',
         'src': '../src'
-    },
-        map = {
-            'base-adapter': {
-                'base-adapter/src': '../components/base-adapter/src'
-            }
-        };
+    };
 
     require({
         baseUrl: './',
         paths: paths,
-        map: map,
         waitSeconds: (window.location.protocol === 'file:' || window.location.href.indexOf('://localhost') !== -1) ? 5 : 45, // Fail early locally
         urlArgs: 'bust=' + (+new Date())
     });
 
     define(['base-adapter/dom/Utilities', 'has'], function (Utilities, has) {
 
-        has.add('debug', !window.mochaPhantomJS && window.console && console.info && console.log);
+        has.add('debug', !window.mochaPhantomJS && !!window.console && !!console.info && !!console.log);
 
         Utilities.ready(function () {
             require(['specs/basic'], function () {
