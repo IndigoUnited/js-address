@@ -7,7 +7,8 @@ There is two implementations available, one that uses the hash (#) and another o
 
 Both implementations also listen to clicks in links and tries to interpret them as values.
 For example, if a link has its `href` set to #/foo and the user clicks it, the address value changes to `/foo` and an `LINK_CHANGE_EVENT` along with a generic `CHANGE_EVENT` will be fired (assuming the hash version).
-You can disable this behaviour globally by disabling the `handleLinks` option or locally by setting the `rel` attribute to `external` in the link tag.
+You can disable this behaviour globally by disabling the `handleLinks` option or locally by setting the `data-url-type` attribute to `external` in the link tag.
+The `data-url-type` can also take the value `internal` which means that preventDefault() will still be called but the actual behaviour should be handled manually.
 Note that in the majority of the cases the library is smart enough to automatically detect if a link is external or internal.
 
 The implementation is not currently supported in < IE8.
