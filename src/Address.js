@@ -6,8 +6,8 @@
  * Those simply need to implement the abstract functions to work correctly.
  *
  * This class also handles the clicks in the link tags (<a> tags).
- * If a link is meant to be a regular link, use the rel="external".
- * If a link is mean to be an internal link but not handled by this address use rel="internal".
+ * If a link is meant to be a regular link, use the data-url-type="external".
+ * If a link is mean to be an internal link but not handled by this address use data-url-type="internal".
  * Please note that links with target!="_self" and external urls are in general automatically ignored.
  *
  * Events:
@@ -230,14 +230,14 @@ define([
          * @param {Element} [$el] The link tag
          */
         _handleLinkClick: function (event, $el) {
-            var rel,
+            var type,
                 ctrlKey,
                 target,
                 url,
                 element;
 
             element = $el || Events.getCurrentTarget(event);
-            rel = element.rel;
+            type = element.getAttribute('data-url-type');
             ctrlKey = event.ctrlKey || event.metaKey;
             target = element.target;
             url = element.href;
@@ -245,9 +245,9 @@ define([
             // Ignore the event if control is pressed
             // Ignore if the link specifies a target different than self
             // Ignore if the link rel attribute is internal or external
-            if (!ctrlKey && (!target || target === '_self') && rel !== 'external') {
+            if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
                 // If the link is internal, then we just prevent default behaviour
-                if (rel === 'internal') {
+                if (type === 'internal') {
                     event.preventDefault();
                     if (has('debug')) {
                         console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');

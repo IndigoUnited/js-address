@@ -399,13 +399,13 @@ define([
 
         });
 
-        it('should ignore clicks on links with rel=external|internal', function (done) {
+        it('should ignore clicks on links with data-url-type=external|internal', function (done) {
 
             if (has('debug')) {
-                console.log('> should ignore links with rel=external|internal');
+                console.log('> should ignore links with data-url-type=external|internal');
             }
 
-            link.rel = 'internal';
+            link.setAttribute('data-url-type', 'internal');
 
             link.href = '#first';
             click();
@@ -419,7 +419,7 @@ define([
                 expect(stack).to.eql([]);
 
                 $(document.body).on('click', preventDefault);
-                link.rel = 'external';
+                link.setAttribute('data-url-type', 'external');
 
                 link.href = '#first';
                 click();
@@ -430,7 +430,7 @@ define([
                 link.href = 'http://google.com#some';
                 click();
 
-                link.rel = '';
+                link.setAttribute('data-url-type', '');
                 $(document.body).off('click', preventDefault);
 
                 setTimeout(function () {
