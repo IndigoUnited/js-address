@@ -93,10 +93,13 @@ define([
          * {@inheritDoc}
          */
         setValue: function (value) {
+            var oldValue;
+
             if (this._value !== value) {
+                oldValue = this._value;
                 this._value = value;
                 this._writeValue(value);
-                this._fireInternalChange(value);
+                this._fireInternalChange(value, oldValue);
             }
 
             return this;
@@ -192,11 +195,12 @@ define([
          * Function to be invoked when a new value needs to be handled due to an external event.
          */
         _onNewValueByExternalEvent: function () {
-            var value = this._readValue();
+            var value = this._readValue(),
+                oldValue = this._value;
 
             if (this._value !== value) {
                 this._value = value;
-                this._fireExternalChange(value);
+                this._fireExternalChange(value, oldValue);
             }
         }.$bound(),
 
@@ -209,12 +213,15 @@ define([
          * @return {Boolean} True if the link was handled internally, false otherwise
          */
         _onNewValueByLinkClick: function (value) {
+            var oldValue;
+
             if (this._isInternalUrl(value)) {
                 value = this._readValue(value);
                 if (this._value !== value) {
+                    oldValue = this._value;
                     this._value = value;
                     this._writeValue(value);
-                    this._fireLinkChange(value);
+                    this._fireLinkChange(value, oldValue);
                 }
 
                 return true;
@@ -271,19 +278,20 @@ define([
          * Fires an internal change event.
          * Also fires the generic change event.
          *
-         * @param {String} value The current value
+         * @param {String} value    The current value
+         * @param {String} oldValue The old value
          */
-        _fireInternalChange: function (value) {
+        _fireInternalChange: function (value, oldValue) {
             if (has('debug')) {
                 console.info('Value changed to ' + value + ' (internally)');
             }
 
-            this._emit(this.$static.EVENT_INTERNAL_CHANGE, value);
+            this._emit(this.$static.EVENT_INTERNAL_CHANGE, value, oldValue);
             // Check if the value changed meanwhile..
             // This is needed because a listener could have changed the value with setValue()
             // If the value changed then the change event was already fired, so we abort
             if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value);
+                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
             }
         },
 
@@ -291,19 +299,20 @@ define([
          * Fires an external change event.
          * Also fires the generic change event.
          *
-         * @param {String} value The current value
+         * @param {String} value    The current value
+         * @param {String} oldValue The old value
          */
-        _fireExternalChange: function (value) {
+        _fireExternalChange: function (value, oldValue) {
             if (has('debug')) {
                 console.info('Value changed to ' + value + ' (externally)');
             }
 
-            this._emit(this.$static.EVENT_EXTERNAL_CHANGE, value);
+            this._emit(this.$static.EVENT_EXTERNAL_CHANGE, value, oldValue);
             // Check if the value changed meanwhile..
             // This is needed because a listener could have changed the value with setValue()
             // If the value changed then the change event was already fired, so we abort
             if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value);
+                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
             }
         },
 
@@ -311,19 +320,20 @@ define([
          * Fires a link change event.
          * Also fires the generic change event.
          *
-         * @param {String} value The current value
+         * @param {String} value    The current value
+         * @param {String} oldValue The old value
          */
-        _fireLinkChange: function (value) {
+        _fireLinkChange: function (value, oldValue) {
             if (has('debug')) {
                 console.info('Value changed to ' + value + ' (link)');
             }
 
-            this._emit(this.$static.EVENT_LINK_CHANGE, value);
+            this._emit(this.$static.EVENT_LINK_CHANGE, value, oldValue);
             // Check if the value changed meanwhile..
             // This is needed because a listener could have changed the value with setValue()
             // If the value changed then the change event was already fired, so we abort
             if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value);
+                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
             }
         },
 
