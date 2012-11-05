@@ -206,16 +206,17 @@ define([
 
         /**
          * Function to be invoked when a new value needs to be handled due to an link click.
-         * Returns true if the link was handled, supressing the normal link behaviour.
+         * Suppresses the normal link behaviour if handled.
          *
-         * @param {String} value  The value
-         *
-         * @return {Boolean} True if the link was handled internally, false otherwise
+         * @param {String} value The value
+         * @param {Object} event The event
          */
-        _onNewValueByLinkClick: function (value) {
+        _onNewValueByLinkClick: function (value, event) {
             var oldValue;
 
             if (this._isInternalUrl(value)) {
+                event.preventDefault();
+
                 value = this._readValue(value);
                 if (this._value !== value) {
                     oldValue = this._value;
@@ -223,11 +224,9 @@ define([
                     this._writeValue(value);
                     this._fireLinkChange(value, oldValue);
                 }
-
-                return true;
+            } else if (has('debug')) {
+                console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
             }
-
-            return false;
         },
 
         /**
@@ -260,14 +259,8 @@ define([
                         console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
                     }
                 } else {
-                    //  Check if the link is from another domain/protocol and if we can handle it
-                    if (this._onNewValueByLinkClick(url)) {
-                        event.preventDefault();
-                    } else {
-                        if (has('debug')) {
-                            console.info('Link poiting to "' + url + '" was automatically interpreted as external.');
-                        }
-                    }
+                    // Handle the link click
+                    this._onNewValueByLinkClick(url, event);
                 }
             } else if (has('debug')) {
                 console.info('Link poiting to "' + url + '" was ignored.');
