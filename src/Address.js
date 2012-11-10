@@ -236,17 +236,11 @@ define([
          * @param {Element} [$el] The link tag
          */
         _handleLinkClick: function (event, $el) {
-            var type,
-                ctrlKey,
-                target,
-                url,
-                element;
-
-            element = $el || Events.getCurrentTarget(event);
-            type = element.getAttribute('data-url-type');
-            ctrlKey = event.ctrlKey || event.metaKey;
-            target = element.target;
-            url = element.href;
+            var element = $el || Events.getCurrentTarget(event),
+                type = element.getAttribute('data-url-type'),
+                ctrlKey = event.ctrlKey || event.metaKey,
+                target = element.target,
+                url =  element.href;
 
             // Ignore the event if control is pressed
             // Ignore if the link specifies a target different than self
