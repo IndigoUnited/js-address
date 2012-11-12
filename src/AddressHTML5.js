@@ -121,6 +121,8 @@ define([
                         throw new Error('Can\'t parse external URL: ' + $path);
                     }
                     path = $path.substr(this._locationSuhp.length);
+                } else {
+                    path = $path;
                 }
             } else {
                 // Otherwise we assume the value from the browser URL
