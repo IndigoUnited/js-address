@@ -30,6 +30,20 @@ define([
         },
 
         /**
+         * Enables the address.
+         *
+         * @return {Address} The instance itself to allow chaining
+         */
+        enable: function () {},
+
+        /**
+         * Disables the address.
+         *
+         * @return {Address} The instance itself to allow chaining
+         */
+        disable: function () {},
+
+        /**
          * Returns the current address value.
          *
          * @param {String} [$value] A value to be used instead of the address bar value

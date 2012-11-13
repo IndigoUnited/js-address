@@ -45,6 +45,7 @@ define([
         _urlParserRegExp: /^(((([^:\/#\?]+:)?(?:(\/\/)((?:(([^:@\/#\?]+)(?:\:([^:@\/#\?]+))?)@)?(([^:\/#\?\]\[]+|\[[^\/\]@#?]+\])(?:\:([0-9]+))?))?)?)?((\/?(?:[^\/\?#]+\/+)*)([^\?#]*)))?(\?[^#]+)?)(#.*)?/,
 
         _value: null,
+        _enabled: true,
         _destroyed: false,
 
         _options: {
@@ -85,6 +86,24 @@ define([
         /**
          * {@inheritDoc}
          */
+        enable: function () {
+            this._enabled = true;
+
+            return this;
+        },
+
+        /**
+         * {@inheritDoc}
+         */
+        disable: function () {
+            this._enabled = false;
+
+            return this;
+        },
+
+        /**
+         * {@inheritDoc}
+         */
         getValue: function ($value) {
             return $value != null ? this._readValue($value) : this._value;
         },
@@ -93,13 +112,15 @@ define([
          * {@inheritDoc}
          */
         setValue: function (value) {
-            var oldValue;
+            if (this._enabled) {
+                var oldValue;
 
-            if (this._value !== value) {
-                oldValue = this._value;
-                this._value = value;
-                this._writeValue(value);
-                this._fireInternalChange(value, oldValue);
+                if (this._value !== value) {
+                    oldValue = this._value;
+                    this._value = value;
+                    this._writeValue(value);
+                    this._fireInternalChange(value, oldValue);
+                }
             }
 
             return this;
@@ -195,12 +216,14 @@ define([
          * Function to be invoked when a new value needs to be handled due to an external event.
          */
         _onNewValueByExternalEvent: function () {
-            var value = this._readValue(),
-                oldValue = this._value;
+            if (this._enabled) {
+                var value = this._readValue(),
+                    oldValue = this._value;
 
-            if (this._value !== value) {
-                this._value = value;
-                this._fireExternalChange(value, oldValue);
+                if (this._value !== value) {
+                    this._value = value;
+                    this._fireExternalChange(value, oldValue);
+                }
             }
         }.$bound(),
 
@@ -236,28 +259,30 @@ define([
          * @param {Element} [$el] The link tag
          */
         _handleLinkClick: function (event, $el) {
-            var element = $el || Events.getCurrentTarget(event),
-                type = element.getAttribute('data-url-type'),
-                ctrlKey = event.ctrlKey || event.metaKey,
-                target = element.target,
-                url =  element.href;
+            if (this._enabled) {
+                var element = $el || Events.getCurrentTarget(event),
+                    type = element.getAttribute('data-url-type'),
+                    ctrlKey = event.ctrlKey || event.metaKey,
+                    target = element.target,
+                    url =  element.href;
 
-            // Ignore the event if control is pressed
-            // Ignore if the link specifies a target different than self
-            // Ignore if the link rel attribute is internal or external
-            if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
-                // If the link is internal, then we just prevent default behaviour
-                if (type === 'internal') {
-                    event.preventDefault();
-                    if (has('debug')) {
-                        console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+                // Ignore the event if control is pressed
+                // Ignore if the link specifies a target different than self
+                // Ignore if the link rel attribute is internal or external
+                if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
+                    // If the link is internal, then we just prevent default behaviour
+                    if (type === 'internal') {
+                        event.preventDefault();
+                        if (has('debug')) {
+                            console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+                        }
+                    } else {
+                        // Handle the link click
+                        this._onNewValueByLinkClick(url, event);
                     }
-                } else {
-                    // Handle the link click
-                    this._onNewValueByLinkClick(url, event);
+                } else if (has('debug')) {
+                    console.info('Link poiting to "' + url + '" was ignored.');
                 }
-            } else if (has('debug')) {
-                console.info('Link poiting to "' + url + '" was ignored.');
             }
         }.$bound(),
 

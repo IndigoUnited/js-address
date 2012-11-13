@@ -30,6 +30,22 @@ Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from
 Return the current value of the address.
 
 
+
+### Address#disable() ###
+
+Disables the address. All operations that change the state will be no ops.
+
+
+### Address#enable() ###
+
+Enables the address.
+
+
+
+### Address#getValue() ###
+
+Return the current value of the address.
+
 ### Address#generateUrl(value, $absolute)
 
 Generate an URL from a `value` to be safely used in link tags.

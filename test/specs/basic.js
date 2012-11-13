@@ -13,6 +13,8 @@ define([
 
     'use strict';
 
+    // TODO: test enable() & disable()
+
     var stack,
         values,
         timeout = 300,
