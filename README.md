@@ -33,7 +33,7 @@ Return the current value of the address.
 
 ### Address#disable() ###
 
-Disables the address. All operations that change the state will be no ops.
+Disables the address. All operations that change the value will be no ops.
 
 
 ### Address#enable() ###
