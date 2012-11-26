@@ -111,7 +111,7 @@ define([
         /**
          * {@inheritDoc}
          */
-        setValue: function (value) {
+        setValue: function (value, $silent) {
             if (this._enabled) {
                 var oldValue;
 
@@ -119,7 +119,9 @@ define([
                     oldValue = this._value;
                     this._value = value;
                     this._writeValue(value);
-                    this._fireInternalChange(value, oldValue);
+                    if (!$silent) {
+                        this._fireInternalChange(value, oldValue);
+                    }
                 }
             }
 
