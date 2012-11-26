@@ -19,10 +19,10 @@ The implementation is not currently supported in < IE8.
 
 Optional parameters are prefixed with an $.
 
-### Address#setValue(value) ###
+### Address#setValue(value, $silent) ###
 
 Set a new value into the address.
-Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current one.
+Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current one unless `$silent` is true.
 
 
 ### Address#getValue() ###
