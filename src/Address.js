@@ -237,20 +237,22 @@ define([
          * @param {Object} event The event
          */
         _onNewValueByLinkClick: function (value, event) {
-            var oldValue;
-
-            if (this._isInternalUrl(value)) {
-                event.preventDefault();
-
-                value = this._readValue(value);
-                if (this._value !== value) {
-                    oldValue = this._value;
-                    this._value = value;
-                    this._writeValue(value);
-                    this._fireLinkChange(value, oldValue);
+            if (this._enabled) {
+                var oldValue;
+    
+                if (this._isInternalUrl(value)) {
+                    event.preventDefault();
+    
+                    value = this._readValue(value);
+                    if (this._value !== value) {
+                        oldValue = this._value;
+                        this._value = value;
+                        this._writeValue(value);
+                        this._fireLinkChange(value, oldValue);
+                    }
+                } else if (has('debug')) {
+                    console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
                 }
-            } else if (has('debug')) {
-                console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
             }
         },
 
@@ -261,30 +263,28 @@ define([
          * @param {Element} [$el] The link tag
          */
         _handleLinkClick: function (event, $el) {
-            if (this._enabled) {
-                var element = $el || Events.getCurrentTarget(event),
-                    type = element.getAttribute('data-url-type'),
-                    ctrlKey = event.ctrlKey || event.metaKey,
-                    target = element.target,
-                    url =  element.href;
+            var element = $el || Events.getCurrentTarget(event),
+                type = element.getAttribute('data-url-type'),
+                ctrlKey = event.ctrlKey || event.metaKey,
+                target = element.target,
+                url =  element.href;
 
-                // Ignore the event if control is pressed
-                // Ignore if the link specifies a target different than self
-                // Ignore if the link rel attribute is internal or external
-                if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
-                    // If the link is internal, then we just prevent default behaviour
-                    if (type === 'internal') {
-                        event.preventDefault();
-                        if (has('debug')) {
-                            console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
-                        }
-                    } else {
-                        // Handle the link click
-                        this._onNewValueByLinkClick(url, event);
+            // Ignore the event if control is pressed
+            // Ignore if the link specifies a target different than self
+            // Ignore if the link rel attribute is internal or external
+            if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
+                // If the link is internal, then we just prevent default behaviour
+                if (type === 'internal') {
+                    event.preventDefault();
+                    if (has('debug')) {
+                        console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
                     }
-                } else if (has('debug')) {
-                    console.info('Link poiting to "' + url + '" was ignored.');
+                } else {
+                    // Handle the link click
+                    this._onNewValueByLinkClick(url, event);
                 }
+            } else if (has('debug')) {
+                console.info('Link poiting to "' + url + '" was ignored.');
             }
         }.$bound(),
 
