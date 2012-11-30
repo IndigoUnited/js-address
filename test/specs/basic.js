@@ -14,7 +14,7 @@ define([
     'use strict';
 
     // TODO: test enable() & disable()
-    // TODO: test $silent
+    // TODO: test silence and force options of setValue()
 
     var stack,
         values,

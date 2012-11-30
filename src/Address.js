@@ -9,6 +9,7 @@
  * If a link is meant to be a regular link, use the data-url-type="external".
  * If a link is mean to be an internal link but not handled by this address use data-url-type="internal".
  * Please note that links with target!="_self" and external urls are in general automatically ignored.
+ * There is also a data-url-force option. When set to true, the value will be changed even if its the current one.
  *
  * Events:
  * - EVENT_EXTERNAL_CHANGE    if the value changes due to an external event (back, next, etc)
@@ -28,10 +29,10 @@ define([
     'has',
     'amd-utils/string/escapeRegExp',
     'amd-utils/string/startsWith',
-    'amd-utils/object/mixIn',
+    'amd-utils/object/merge',
     'amd-utils/lang/isFunction',
     'base-adapter/dom/Events'
-], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, mixIn, isFunction, Events) {
+], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, merge, isFunction, Events) {
 
     'use strict';
 
@@ -64,8 +65,7 @@ define([
             }
 
             // Merge the options
-            // It's unecessary to use merge because options are only 1 level deep
-            mixIn(this._options, $options || {});
+            merge(this._options, $options || {});
 
             // Cache the location scheme + userinfo + host + port
             this._locationSuhp = this._extractSuhpFromUrl(location.href);
@@ -111,15 +111,17 @@ define([
         /**
          * {@inheritDoc}
          */
-        setValue: function (value, $silent) {
+        setValue: function (value, $options) {
             if (this._enabled) {
                 var oldValue;
 
-                if (this._value !== value) {
+                $options = $options || {};
+
+                if (this._value !== value || $options.force) {
                     oldValue = this._value;
                     this._value = value;
                     this._writeValue(value);
-                    if (!$silent) {
+                    if (!$options.silent) {
                         this._fireInternalChange(value, oldValue);
                     }
                 }
@@ -233,18 +235,19 @@ define([
          * Function to be invoked when a new value needs to be handled due to an link click.
          * Suppresses the normal link behaviour if handled.
          *
-         * @param {String} value The value
-         * @param {Object} event The event
+         * @param {String}  value    The value
+         * @param {Object}  event    The event
+         * @param {Boolean} [$force] True to force the change even if the value is the same
          */
-        _onNewValueByLinkClick: function (value, event) {
+        _onNewValueByLinkClick: function (value, event, $force) {
             if (this._enabled) {
                 var oldValue;
-    
+
                 if (this._isInternalUrl(value)) {
                     event.preventDefault();
-    
+
                     value = this._readValue(value);
-                    if (this._value !== value) {
+                    if (this._value !== value || $force) {
                         oldValue = this._value;
                         this._value = value;
                         this._writeValue(value);
@@ -265,6 +268,7 @@ define([
         _handleLinkClick: function (event, $el) {
             var element = $el || Events.getCurrentTarget(event),
                 type = element.getAttribute('data-url-type'),
+                force = element.getAttribute('data-url-force'),
                 ctrlKey = event.ctrlKey || event.metaKey,
                 target = element.target,
                 url =  element.href;
@@ -281,7 +285,7 @@ define([
                     }
                 } else {
                     // Handle the link click
-                    this._onNewValueByLinkClick(url, event);
+                    this._onNewValueByLinkClick(url, event, force);
                 }
             } else if (has('debug')) {
                 console.info('Link poiting to "' + url + '" was ignored.');
