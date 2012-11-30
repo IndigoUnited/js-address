@@ -22,7 +22,7 @@ Optional parameters are prefixed with an $.
 ### Address#setValue(value, $options) ###
 
 Set a new value into the address.
-Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current.
+Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current one.
 
 The following options are available:
 - force:  true to force the value to be changed even if the value is the same
