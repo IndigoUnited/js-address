@@ -51,7 +51,7 @@ if (!(typeof window !== 'undefined' && window.navigator && window.document)) {
 
     define(['base-adapter/dom/Utilities', 'has'], function (Utilities, has) {
 
-        has.add('debug', !window.mochaPhantomJS && !!window.console && !!console.info && !!console.log);
+        has.add('debug', !!window.console && !!console.info && !!console.log);
 
         Utilities.ready(function () {
             require(['specs/basic'], function () {
