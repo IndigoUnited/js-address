@@ -142,39 +142,6 @@ define([
 
         /////////////////////////////////////////////////////////////////////////////////////
 
-        $abstracts: {
-            /**
-             * {@inheritDoc}
-             */
-            generateUrl: function (value, $absolute) {},
-
-            /**
-             * Reads and returns the current extracted value of the browser address URL.
-             *
-             * @param {String} [$path] The path to be used instead of the browser address URL (can be a full url or a relative on)
-             *
-             * @return {String} The extracted value
-             */
-            _readValue: function ($path) {},
-
-            /**
-             * Writes a value to the browser address bar.
-             * The value passed will generate and apply a new URL to the browser address bar.
-             *
-             * @param {String} value The value to be set
-             */
-            _writeValue: function (value) {},
-
-            $statics: {
-                /**
-                 * Check if this implementation is compatible with the current environment.
-                 */
-                isCompatible: function () {}
-            }
-        },
-
-        /////////////////////////////////////////////////////////////////////////////////////
-
         /**
          * Checks if a given URL is absolute.
          *
@@ -211,9 +178,29 @@ define([
          * @return {Boolean} True if it is external, false otherwise
          */
         _isInternalUrl: function (url) {
-            // We first check if the URL is absolute because the _extractUrlSuhp function is somewhat slower
+            // We first check if the URL is absolute because the _extractSuhpFromUrl function is somewhat slower
             // So if an URL is absolute we do not need to run it
             return !this._isAbsoluteUrl(url) || this._extractSuhpFromUrl(url) === this._locationSuhp;
+        },
+
+        /**
+         * Checks if a given URL belongs to another scheme, other than the http(s) one.
+         *
+         * @param {String} url The URL
+         *
+         * @return {Boolean} True if is, false otherwise
+         */
+        _isOtherScheme: function (url) {
+            var pos = url.indexOf('://'),
+                scheme;
+
+            if (pos === -1) {
+                return false;
+            }
+
+            scheme = url.substr(0, pos);
+
+            return scheme !== 'http' && scheme !== 'https';
         },
 
         /**
@@ -273,22 +260,24 @@ define([
                 target = element.target,
                 url =  element.href;
 
-            // Ignore the event if control is pressed
-            // Ignore if the link specifies a target different than self
-            // Ignore if the link rel attribute is internal or external
-            if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
-                // If the link is internal, then we just prevent default behaviour
-                if (type === 'internal') {
-                    event.preventDefault();
-                    if (has('debug')) {
-                        console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+            if (!this._isOtherScheme(url)) {
+                // Ignore the event if control is pressed
+                // Ignore if the link specifies a target different than self
+                // Ignore if the link rel attribute is internal or external
+                if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
+                    // If the link is internal, then we just prevent default behaviour
+                    if (type === 'internal') {
+                        event.preventDefault();
+                        if (has('debug')) {
+                            console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+                        }
+                    } else {
+                        // Handle the link click
+                        this._onNewValueByLinkClick(url, event, force);
                     }
-                } else {
-                    // Handle the link click
-                    this._onNewValueByLinkClick(url, event, force);
+                } else if (has('debug') && url) {
+                    console.info('Link poiting to "' + url + '" was ignored.');
                 }
-            } else if (has('debug')) {
-                console.info('Link poiting to "' + url + '" was ignored.');
             }
         }.$bound(),
 
@@ -367,6 +356,39 @@ define([
 
             // Clear the listeners
             this.off();
+        },
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+        $abstracts: {
+            /**
+             * {@inheritDoc}
+             */
+            generateUrl: function (value, $absolute) {},
+
+            /**
+             * Reads and returns the current extracted value of the browser address URL.
+             *
+             * @param {String} [$path] The path to be used instead of the browser address URL (can be a full url or a relative on)
+             *
+             * @return {String} The extracted value
+             */
+            _readValue: function ($path) {},
+
+            /**
+             * Writes a value to the browser address bar.
+             * The value passed will generate and apply a new URL to the browser address bar.
+             *
+             * @param {String} value The value to be set
+             */
+            _writeValue: function (value) {},
+
+            $statics: {
+                /**
+                 * Check if this implementation is compatible with the current environment.
+                 */
+                isCompatible: function () {}
+            }
         }
     });
 });

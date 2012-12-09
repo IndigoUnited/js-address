@@ -77,6 +77,13 @@ define(['./Address', 'base-adapter/dom/Events'], function (Address, Events) {
         /**
          * {@inheritDoc}
          */
+        _isOtherScheme: function (url) {
+            return url.charAt(0) === '#' ? false : this.$super(url);
+        },
+
+        /**
+         * {@inheritDoc}
+         */
         _onDestroy: function () {
             Events.off(window, 'hashchange', this._onNewValueByExternalEvent);
 
