@@ -33,19 +33,15 @@ define([
          * {@inheritDoc}
          */
         _initialize: function ($options) {
-            mixIn(this._options, $options);
-
-            this._basePath = this._options.basePath;
+            this.$super($options);
 
             // Prevent "The option is insecure" issue because values can't start with //
             // Also ensure that it starts with an /
             // Encode it to be valid in the comparisons because it can contain special chars
-            this._basePath = this._encodeValue(this._basePath);
+            this._basePath = this._encodeValue(this._options._basePath);
             this._basePath = '/' + this._trimLeadingSlashes(this._basePath);
 
             this._baseElement = document.getElementsByTagName('base');
-
-            this.$super($options);
 
             Events.on(window, 'popstate', this._onNewValueByExternalEvent);
         },

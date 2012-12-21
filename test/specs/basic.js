@@ -14,7 +14,8 @@ define([
     'use strict';
 
     // TODO: test enable() & disable()
-    // TODO: test silence and force options of setValue()
+    // TODO: test silent and force options of setValue()
+    // TODO: test address options (handleLinks & basePath)
 
     var stack,
         values,
@@ -26,7 +27,6 @@ define([
         pathname,
         address,
         initialValue = 'some\'+value',
-        jqxhr,
         addressHTML5Options = [
             {},
             {
@@ -59,40 +59,6 @@ define([
             }
         ];
 
-    function doLongRunningRequest() {
-        if (!jqxhr) {
-
-            if (location.protocol === 'file:') {
-                if (has('debug')) {
-                    console.warn('Cannot simulate a long running ajax call on file:// protocol');
-                }
-                return;
-            }
-
-            var url = originalPathname,
-                pos = url.lastIndexOf('/');
-
-            if (pos !== -1) {
-                url = url.substr(0, pos);
-            }
-
-            jqxhr = $.ajax(url + '/long_running.php')
-                     .success(function () { jqxhr = null; doLongRunningRequest(); })
-                     .error(function () {
-                        if (has('debug')) {
-                            console.warn('Long request failed..');
-                        }
-                    });
-        }
-    }
-
-    function cancelLongRunningRequest() {
-        if (jqxhr) {
-            jqxhr.abort();
-            jqxhr = null;
-        }
-    }
-
     function click() {
         if (linkInner.click) {
             linkInner.click();
@@ -113,15 +79,6 @@ define([
 
         if (AddressHash.isCompatible()) {
             describe('AddressHash', function () {
-
-                before(function () {
-                    // Do a long running ajax call because Safari is known to not fire popstate and hashchange(?) events if a network connection is in progress
-                    //doLongRunningRequest();
-                });
-
-                after(function () {
-                    cancelLongRunningRequest();
-                });
 
                 beforeEach(function () {
                     stack = [];
@@ -170,11 +127,6 @@ define([
             }
 
             describe('AddressHTML5 (basePath: ' + (!options.basePath && options.basePath !== '' ? originalPathname + '/' : options.basePath) + ')', function () {
-                before(function () {
-                    // Do a long running ajax call because Safari is known to not fire popstate and hashchange(?) events if a network connection is in progress
-                    //doLongRunningRequest();
-                });
-
                 beforeEach(function () {
                     stack = [];
                     values = [];
@@ -199,7 +151,6 @@ define([
                         testAddressHTML5();
                     } else {
                         address.destroy();
-                        cancelLongRunningRequest();
                     }
 
                     history.pushState({}, '', originalPathname);   // Restore the initial state to be easier to refresh
@@ -688,8 +639,5 @@ define([
 
     }
 
-    // TODO: test destroy();
-
     testAddressHash();
-    //testAddressHTML5();
 });

@@ -29,10 +29,10 @@ define([
     'has',
     'amd-utils/string/escapeRegExp',
     'amd-utils/string/startsWith',
-    'amd-utils/object/merge',
+    'amd-utils/object/deepMixin',
     'amd-utils/lang/isFunction',
     'base-adapter/dom/Events'
-], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, merge, isFunction, Events) {
+], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, deepMixin, isFunction, Events) {
 
     'use strict';
 
@@ -50,8 +50,7 @@ define([
         _destroyed: false,
 
         _options: {
-            handleLinks: true,             // This can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
-            debug: false
+            handleLinks: true  // This can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
         },
 
         /**
@@ -65,7 +64,7 @@ define([
             }
 
             // Merge the options
-            merge(this._options, $options || {});
+            deepMixin(this._options, $options || {});
 
             // Cache the location scheme + userinfo + host + port
             this._locationSuhp = this._extractSuhpFromUrl(location.href);
