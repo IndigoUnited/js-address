@@ -132,6 +132,15 @@ define([
         /**
          * {@inheritDoc}
          */
+        reset: function () {
+            this._value = null;
+
+            return this;
+        },
+
+        /**
+         * {@inheritDoc}
+         */
         destroy: function () {
             if (!this._destroyed) {
                 this._onDestroy();

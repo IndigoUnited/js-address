@@ -68,6 +68,14 @@ define([
         setValue: function (value, $options) {},
 
         /**
+         * Resets the interal state of address.
+         * Clears the internal value and any other state.
+         *
+         * @return {Address} The instance itself to allow chaining
+         */
+        reset: function () {},
+
+        /**
          * Generates an URL based on a given value.
          * By default the generated URL will be relative unless $absolute is true.
          *

@@ -30,12 +30,6 @@ The following options are available:
 
 
 
-### Address#getValue() ###
-
-Return the current value of the address.
-
-
-
 ### Address#disable() ###
 
 Disables the address. All operations that change the value will be no ops.
@@ -46,10 +40,26 @@ Disables the address. All operations that change the value will be no ops.
 Enables the address.
 
 
+### Address#getValue() ###
+
+Return the current value of the address.
+
+
+### Address#setValue() ###
+
+Return the current value of the address.
+
 
 ### Address#getValue() ###
 
 Return the current value of the address.
+
+
+### Address#reset() ###
+
+Resets the interal state of address.
+Clears the internal value and any other state.
+
 
 ### Address#generateUrl(value, $absolute)
 
@@ -60,6 +70,11 @@ By default the generated URL will be relative, unless `$absolute` is true.
 ### Address#on(event, fn, $context) ###
 
 Register an `event` listener `fn` (with the option to pass a `$context`).
+
+
+### Address#once(event, fn, $context) ###
+
+Register an `event` listener `fn` (with the option to pass a `$context`) that runs only once.
 
 
 ### Address#off(event, $fn, $context) ###
