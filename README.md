@@ -19,17 +19,6 @@ The implementation is not currently supported in < IE8.
 
 Optional parameters are prefixed with an $.
 
-### Address#setValue(value, $options) ###
-
-Set a new value into the address.
-Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current one.
-
-The following options are available:
-- force:  true to force the value to be changed even if the value is the same
-- silent: true to change the value with firing any events
-
-
-
 ### Address#disable() ###
 
 Disables the address. All operations that change the value will be no ops.
@@ -45,14 +34,14 @@ Enables the address.
 Return the current value of the address.
 
 
-### Address#setValue() ###
+### Address#setValue(value, $options) ###
 
-Return the current value of the address.
+Set a new value into the address.
+Fires an `INTERNAL_CHANGE_EVENT` and an `CHANGE_EVENT` if the value differs from the current one.
 
-
-### Address#getValue() ###
-
-Return the current value of the address.
+The following options are available:
+- force:  true to force the value to be changed even if the value is the same
+- silent: true to change the value with firing any events
 
 
 ### Address#reset() ###
