@@ -7,12 +7,11 @@
 define([
     './Address',
     'amd-utils/string/startsWith',
-    'amd-utils/string/endsWith',
-    'amd-utils/object/mixIn',
+    'amd-utils/object/deepMixin',
     'base-adapter/dom/Events',
     'base-adapter/environment/Platform',
     'base-adapter/environment/Browser'
-], function (Address, startsWith, endsWith, mixIn, Events, Platform, Browser) {
+], function (Address, startsWith, deepMixin, Events, Platform, Browser) {
 
     'use strict';
 
@@ -33,15 +32,18 @@ define([
          * {@inheritDoc}
          */
         _initialize: function ($options) {
-            this.$super($options);
+            // Merge the options
+            deepMixin(this._options, $options || {});
 
             // Prevent "The option is insecure" issue because values can't start with //
             // Also ensure that it starts with an /
             // Encode it to be valid in the comparisons because it can contain special chars
-            this._basePath = this._encodeValue(this._options._basePath);
+            this._basePath = this._encodeValue(this._options.basePath);
             this._basePath = '/' + this._trimLeadingSlashes(this._basePath);
 
             this._baseElement = document.getElementsByTagName('base');
+
+            this.$super($options);
 
             Events.on(window, 'popstate', this._onNewValueByExternalEvent);
         },
@@ -113,6 +115,7 @@ define([
                     if (!tmp) {
                         throw new Error('Unable to parse URL: ' + $path);
                     }
+
                     if (tmp !== this._locationSuhp) {
                         throw new Error('Can\'t parse external URL: ' + $path);
                     }
@@ -130,7 +133,6 @@ define([
 
             // Extract the portion after the full base path
             basePos = path.indexOf(this._basePath);
-
             if (basePos !== -1) {
                 path = path.substr(basePos + this._basePath.length);
             } else {

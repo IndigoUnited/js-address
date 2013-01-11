@@ -27,12 +27,9 @@ define([
     './AddressInterface',
     'events-emitter/MixableEventsEmitter',
     'has',
-    'amd-utils/string/escapeRegExp',
-    'amd-utils/string/startsWith',
     'amd-utils/object/deepMixin',
-    'amd-utils/lang/isFunction',
     'base-adapter/dom/Events'
-], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, escapeRegExp, startsWith, deepMixin, isFunction, Events) {
+], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, deepMixin, Events) {
 
     'use strict';
 
