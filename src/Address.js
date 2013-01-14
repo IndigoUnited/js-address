@@ -27,7 +27,7 @@ define([
     './AddressInterface',
     'events-emitter/MixableEventsEmitter',
     'has',
-    'amd-utils/object/deepMixin',
+    'mout/object/deepMixin',
     'base-adapter/dom/Events'
 ], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, deepMixin, Events) {
 

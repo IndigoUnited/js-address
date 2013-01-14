@@ -6,8 +6,8 @@
  */
 define([
     './Address',
-    'amd-utils/string/startsWith',
-    'amd-utils/object/deepMixin',
+    'mout/string/startsWith',
+    'mout/object/deepMixin',
     'base-adapter/dom/Events',
     'base-adapter/environment/Platform',
     'base-adapter/environment/Browser'

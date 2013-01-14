@@ -4,10 +4,10 @@ define([
     'src/AddressHTML5',
     'has',
     'jquery',
-    'amd-utils/function/bind',
-    'amd-utils/array/append',
-    'amd-utils/string/startsWith',
-    'amd-utils/string/endsWith',
+    'mout/function/bind',
+    'mout/array/append',
+    'mout/string/startsWith',
+    'mout/string/endsWith',
     'base-adapter/src/util/triggerEvent'
 ], function (Address, AddressHash, AddressHTML5, has, $, bind, append, startsWith, endsWith, triggerEvent) {
 
