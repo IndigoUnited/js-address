@@ -27,9 +27,9 @@ define([
     './AddressInterface',
     'events-emitter/MixableEventsEmitter',
     'has',
-    'mout/object/deepMixin',
+    'mout/object/deepMixIn',
     'base-adapter/dom/Events'
-], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, deepMixin, Events) {
+], function (AbstractClass, AddressInterface, MixableEventsEmitter, has, deepMixIn, Events) {
 
     'use strict';
 
@@ -61,7 +61,7 @@ define([
             }
 
             // Merge the options
-            deepMixin(this._options, $options || {});
+            deepMixIn(this._options, $options || {});
 
             // Cache the location scheme + userinfo + host + port
             this._locationSuhp = this._extractSuhpFromUrl(location.href);

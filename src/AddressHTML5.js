@@ -7,11 +7,11 @@
 define([
     './Address',
     'mout/string/startsWith',
-    'mout/object/deepMixin',
+    'mout/object/deepMixIn',
     'base-adapter/dom/Events',
     'base-adapter/environment/Platform',
     'base-adapter/environment/Browser'
-], function (Address, startsWith, deepMixin, Events, Platform, Browser) {
+], function (Address, startsWith, deepMixIn, Events, Platform, Browser) {
 
     'use strict';
 
@@ -33,7 +33,7 @@ define([
          */
         _initialize: function ($options) {
             // Merge the options
-            deepMixin(this._options, $options || {});
+            deepMixIn(this._options, $options || {});
 
             // Prevent "The option is insecure" issue because values can't start with //
             // Also ensure that it starts with an /
