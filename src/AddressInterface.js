@@ -4,10 +4,14 @@
  * Address interface.
  *
  * Events:
- * - EVENT_EXTERNAL_CHANGE    if the value changes due to an external event (back, next, etc)
- * - EVENT_INTERNAL_CHANGE    if the value changes due to a setValue() call
- * - EVENT_LINK_CHANGE        if the value changes due to user clicking a link click (<a> tags)
- * - EVENT_CHANGE             fired after each of the ones above (generic event)
+ * - EVENT_CHANGE            fired after each of the ones above (generic event)
+ * - EVENT_DISABLE           fired when the address is disabled
+ * - EVENT_ENABLE            fired when the address is enabled
+ *
+ * Change event types:
+ * - TYPE_EXTERNAL_CHANGE    if the value changes due to an external event (back, next, etc)
+ * - TYPE_INTERNAL_CHANGE    if the value changes due to a setValue() call
+ * - TYPE_LINK_CHANGE        if the value changes due to user clicking a link click (<a> tags)
  *
  * // TODO: add browser quirks regarding this to the WTF-Browsers repository
  *
@@ -23,9 +27,10 @@ define([
         $name: 'AddressInterface',
 
         $constants: {
-            EVENT_EXTERNAL_CHANGE: 'external_change',
-            EVENT_INTERNAL_CHANGE: 'internal_change',
-            EVENT_LINK_CHANGE: 'link_change',
+            TYPE_EXTERNAL_CHANGE: 'external',
+            TYPE_INTERNAL_CHANGE: 'internal',
+            TYPE_LINK_CHANGE: 'link',
+
             EVENT_CHANGE: 'change'
         },
 

@@ -84,6 +84,7 @@ define([
          */
         enable: function () {
             this._enabled = true;
+            this._emit(this.$static.EVENT_ENABLE);
 
             return this;
         },
@@ -93,6 +94,7 @@ define([
          */
         disable: function () {
             this._enabled = false;
+            this._emit(this.$static.EVENT_DISABLE);
 
             return this;
         },
@@ -243,7 +245,7 @@ define([
                         oldValue = this._value;
                         this._value = value;
                         this._writeValue(value);
-                        this._fireLinkChange(value, oldValue);
+                        this._fireLinkChange(value, oldValue, event);
                     }
                 } else if (has('debug')) {
                     console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
@@ -298,13 +300,11 @@ define([
                 console.info('Value changed to ' + value + ' (internally)');
             }
 
-            this._emit(this.$static.EVENT_INTERNAL_CHANGE, value, oldValue);
-            // Check if the value changed meanwhile..
-            // This is needed because a listener could have changed the value with setValue()
-            // If the value changed then the change event was already fired, so we abort
-            if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
-            }
+            this._emit(this.$static.EVENT_CHANGE, {
+                newValue: value,
+                oldValue: oldValue,
+                type: this.$static.TYPE_INTERNAL_CHANGE
+            });
         },
 
         /**
@@ -319,13 +319,11 @@ define([
                 console.info('Value changed to ' + value + ' (externally)');
             }
 
-            this._emit(this.$static.EVENT_EXTERNAL_CHANGE, value, oldValue);
-            // Check if the value changed meanwhile..
-            // This is needed because a listener could have changed the value with setValue()
-            // If the value changed then the change event was already fired, so we abort
-            if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
-            }
+            this._emit(this.$static.EVENT_CHANGE, {
+                newValue: value,
+                oldValue: oldValue,
+                type: this.$static.TYPE_EXTERNAL_CHANGE
+            });
         },
 
         /**
@@ -334,19 +332,19 @@ define([
          *
          * @param {String} value    The current value
          * @param {String} oldValue The old value
+         * @param {Event}  event    The event that originated the change
          */
-        _fireLinkChange: function (value, oldValue) {
+        _fireLinkChange: function (value, oldValue, event) {
             if (has('debug')) {
                 console.info('Value changed to ' + value + ' (link)');
             }
 
-            this._emit(this.$static.EVENT_LINK_CHANGE, value, oldValue);
-            // Check if the value changed meanwhile..
-            // This is needed because a listener could have changed the value with setValue()
-            // If the value changed then the change event was already fired, so we abort
-            if (this._value === value) {
-                this._emit(this.$static.EVENT_CHANGE, value, oldValue);
-            }
+            this._emit('change', {
+                newValue: value,
+                oldValue: oldValue,
+                type: this.$static.TYPE_LINK_CHANGE,
+                event: event
+            });
         },
 
         /**

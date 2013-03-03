@@ -164,21 +164,21 @@ define([
 
     function run(address) {
 
-        address.on(Address.EVENT_INTERNAL_CHANGE, function () {
-            stack.push('i');
-        });
+        address.on('change', function (obj) {
+            switch (obj.type) {
+            case Address.TYPE_INTERNAL_CHANGE:
+                stack.push('i');
+                break;
+            case Address.TYPE_EXTERNAL_CHANGE:
+                stack.push('e');
+                break;
+            case Address.TYPE_LINK_CHANGE:
+                stack.push('l');
+                break;
+            }
 
-        address.on(Address.EVENT_EXTERNAL_CHANGE, function () {
-            stack.push('e');
-        });
-
-        address.on(Address.EVENT_LINK_CHANGE, function () {
-            stack.push('l');
-        });
-
-        address.on(Address.EVENT_CHANGE, function (value) {
             stack.push('c');
-            values.push(value);
+            values.push(obj.newValue);
         });
 
         it('should be able to read the initial value with getValue()', function () {
@@ -233,27 +233,6 @@ define([
                     expect(values).to.eql(['first', '#second']);
                 }
 
-                done();
-            }, timeout);
-
-        });
-
-        it('should not fire the generic event twice if a listener to an internal event calls setValue', function (done) {
-
-            if (has('debug')) {
-                console.log('> should fire the generic event twice if a listener to an internal event calls setValue');
-            }
-
-            var listener = function () {
-                address.setValue('changed');
-            };
-            address.on(Address.EVENT_INTERNAL_CHANGE, listener);
-            address.setValue('somevalue');
-            address.off(Address.EVENT_INTERNAL_CHANGE, listener);
-
-            setTimeout(function () {
-                expect(stack).to.eql(['i', 'i', 'c']);
-                expect(values).to.eql(['changed']);
                 done();
             }, timeout);
 
