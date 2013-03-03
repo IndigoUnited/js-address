@@ -44,6 +44,8 @@ The following options are available:
 - `silent`:  true to change the value with firing the change event
 - `replace`: true to replace the last history entry
 
+_NOTE_: These options are also available in data-url-* attributes, e.g.:
+`data-url-force="true"`
 
 ### Address#reset() ###
 
