@@ -126,7 +126,7 @@ define([
                 if (this._value !== value || $options.force) {
                     oldValue = this._value;
                     this._value = value;
-                    this._writeValue(value);
+                    this._writeValue(value, $options.replace);
                     if (!$options.silent) {
                         this._fireInternalChange(value, oldValue);
                     }
@@ -237,23 +237,28 @@ define([
          * Function to be invoked when a new value needs to be handled due to an link click.
          * Suppresses the normal link behaviour if handled.
          *
-         * @param {String}  value    The value
-         * @param {Object}  event    The event
-         * @param {Boolean} [$force] True to force the change even if the value is the same
+         * @param {String}  value      The value
+         * @param {Object}  event      The event
+         * @param {Boolean} [$options] True to force the change even if the value is the same
          */
-        _onNewValueByLinkClick: function (value, event, $force) {
+        _onNewValueByLinkClick: function (value, event, $options) {
             if (this._enabled) {
                 var oldValue;
+
+                $options = $options || {};
 
                 if (this._isInternalUrl(value)) {
                     event.preventDefault();
 
                     value = this._readValue(value);
-                    if (this._value !== value || $force) {
+                    if (this._value !== value || $options.force) {
                         oldValue = this._value;
                         this._value = value;
-                        this._writeValue(value);
-                        this._fireLinkChange(value, oldValue, event);
+                        this._writeValue(value, $options.replace);
+
+                        if (!$options.silent) {
+                            this._fireLinkChange(value, oldValue, event);
+                        }
                     }
                 } else if (has('debug')) {
                     console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
@@ -270,10 +275,14 @@ define([
         _handleLinkClick: function (event, $el) {
             var element = $el || Events.getCurrentTarget(event),
                 type = element.getAttribute('data-url-type'),
-                force = element.getAttribute('data-url-force'),
                 ctrlKey = event.ctrlKey || event.metaKey,
                 target = element.target,
-                url =  element.href;
+                url =  element.href,
+                options = {
+                    force: !!element.getAttribute('data-url-force'),
+                    replace: !!element.getAttribute('data-url-replace'),
+                    silent: !!element.getAttribute('data-url-silent')
+                };
 
             if (!this._isOtherScheme(url)) {
                 // Ignore the event if control is pressed
@@ -288,7 +297,7 @@ define([
                         }
                     } else {
                         // Handle the link click
-                        this._onNewValueByLinkClick(url, event, force);
+                        this._onNewValueByLinkClick(url, event, options);
                     }
                 } else if (has('debug') && url) {
                     console.info('Link poiting to "' + url + '" was ignored.');
