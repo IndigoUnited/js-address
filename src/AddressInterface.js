@@ -59,11 +59,11 @@ define([
 
         /**
          * Sets the address value.
-         * If the resource changed, the internal change event will be fired.
+         * If the resource changed, the change event will be fired (with type internal).
          *
          * The default implementation should handle these options:
          *  - force:  true to force the value to be changed even if the value is the same
-         *  - silent: true to change the value with firing any events
+         *  - silent: true to change the value with firing the change event
          *
          * @param {String} value      The value to be set
          * @param {Object} [$options] The options

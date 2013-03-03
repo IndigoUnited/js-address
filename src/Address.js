@@ -12,10 +12,14 @@
  * There is also a data-url-force option. When set to true, the value will be changed even if its the current one.
  *
  * Events:
- * - EVENT_EXTERNAL_CHANGE    if the value changes due to an external event (back, next, etc)
- * - EVENT_INTERNAL_CHANGE    if the value changes due to a setValue() call
- * - EVENT_LINK_CHANGE        if the value changes due to user clicking a link click (<a> tags)
- * - EVENT_CHANGE             fired after each of the ones above (generic event)
+ * - EVENT_CHANGE            fired after each of the ones above (generic event)
+ * - EVENT_DISABLE           fired when the address is disabled
+ * - EVENT_ENABLE            fired when the address is enabled
+ *
+ * Change event types:
+ * - TYPE_EXTERNAL_CHANGE    if the value changes due to an external event (back, next, etc)
+ * - TYPE_INTERNAL_CHANGE    if the value changes due to a setValue() call
+ * - TYPE_LINK_CHANGE        if the value changes due to user clicking a link click (<a> tags)
  *
  * // TODO: add browser quirks regarding this to the WTF-Browsers repository
  *
@@ -289,8 +293,7 @@ define([
         }.$bound(),
 
         /**
-         * Fires an internal change event.
-         * Also fires the generic change event.
+         * Fires a change event with type internal.
          *
          * @param {String} value    The current value
          * @param {String} oldValue The old value
@@ -308,8 +311,7 @@ define([
         },
 
         /**
-         * Fires an external change event.
-         * Also fires the generic change event.
+         * Fires a change event with type external.
          *
          * @param {String} value    The current value
          * @param {String} oldValue The old value
@@ -327,8 +329,7 @@ define([
         },
 
         /**
-         * Fires a link change event.
-         * Also fires the generic change event.
+         * Fires a change event with type link.
          *
          * @param {String} value    The current value
          * @param {String} oldValue The old value
