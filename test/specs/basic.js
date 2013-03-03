@@ -15,7 +15,7 @@ define([
 
     // TODO: test enable() & disable()
     // TODO: test silent and force options of setValue()
-    // TODO: test address options (handleLinks & basePath)
+    // TODO: test handleLinks address options
 
     var stack,
         values,

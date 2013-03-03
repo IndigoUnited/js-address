@@ -31,7 +31,9 @@ define([
             TYPE_INTERNAL_CHANGE: 'internal',
             TYPE_LINK_CHANGE: 'link',
 
-            EVENT_CHANGE: 'change'
+            EVENT_CHANGE: 'change',
+            EVENT_ENABLE: 'enable',
+            EVENT_DISABLE: 'disable'
         },
 
         /**

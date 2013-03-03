@@ -87,8 +87,10 @@ define([
          * {@inheritDoc}
          */
         enable: function () {
-            this._enabled = true;
-            this._emit(this.$static.EVENT_ENABLE);
+            if (!this._enabled) {
+                this._enabled = true;
+                this._emit(this.$static.EVENT_ENABLE);
+            }
 
             return this;
         },
@@ -97,8 +99,10 @@ define([
          * {@inheritDoc}
          */
         disable: function () {
-            this._enabled = false;
-            this._emit(this.$static.EVENT_DISABLE);
+            if (this._enabled) {
+                this._enabled = false;
+                this._emit(this.$static.EVENT_DISABLE);
+            }
 
             return this;
         },
@@ -333,7 +337,7 @@ define([
          *
          * @param {String} value    The current value
          * @param {String} oldValue The old value
-         * @param {Event}  event    The event that originated the change
+         * @param {Event}  event    The DOM event that cause the change
          */
         _fireLinkChange: function (value, oldValue, event) {
             if (has('debug')) {
