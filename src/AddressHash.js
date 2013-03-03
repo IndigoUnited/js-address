@@ -51,9 +51,14 @@ define(['./Address', 'base-adapter/dom/Events'], function (Address, Events) {
         /**
          * {@inheritDoc}
          */
-        _writeValue: function (value) {
-            value = this._encodeValue(value);
-            location.href = '#' + value;
+        _writeValue: function (value, $replace) {
+            value = '#' + this._encodeValue(value);
+
+            if ($replace) {
+                location.replace(value);
+            } else {
+                location.href = value;
+            }
         },
 
         /**

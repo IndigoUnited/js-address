@@ -14,7 +14,7 @@ define([
     'use strict';
 
     // TODO: test enable() & disable()
-    // TODO: test silent and force options of setValue()
+    // TODO: test silent, force, replace options of setValue()
     // TODO: test handleLinks address options
 
     var stack,

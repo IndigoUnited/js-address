@@ -387,9 +387,10 @@ define([
              * Writes a value to the browser address bar.
              * The value passed will generate and apply a new URL to the browser address bar.
              *
-             * @param {String} value The value to be set
+             * @param {String}  value      The value to be set
+             * @param {Boolean} [$replace] True to replace the last history entry, false otherwise
              */
-            _writeValue: function (value) {},
+            _writeValue: function (value, $replace) {},
 
             $statics: {
                 /**

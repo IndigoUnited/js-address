@@ -159,13 +159,17 @@ define([
         /**
          * {@inheritDoc}
          */
-        _writeValue: function (value) {
+        _writeValue: function (value, $replace) {
             var path = this._basePath + this._encodeValue(value);
 
-            history.pushState(this._emptyObj, this._emptyStr, path);
+            if ($replace) {
+                history.replaceState(this._emptyObj, this._emptyStr, path);
+            } else {
+                history.pushState(this._emptyObj, this._emptyStr, path);
 
-            // Fix a weird Opera bug (http://my.opera.com/community/forums/topic.dml?id=1185462)
-            this._baseElement.href = this._baseElement.href;
+                // Fix a weird Opera bug (http://my.opera.com/community/forums/topic.dml?id=1185462)
+                this._baseElement.href = this._baseElement.href;
+            }
         },
 
         /**

@@ -40,8 +40,9 @@ Set a new value into the address.
 Fires an `EVENT_CHANGE` event of type `TYPE_INTERNAL_CHANGE` if the value differs from the current one.
 
 The following options are available:
-- force:  true to force the value to be changed even if the value is the same
-- silent: true to change the value with firing the change event
+- `force`:   true to force the value to be changed even if the value is the same
+- `silent`:  true to change the value with firing the change event
+- `replace`: true to replace the last history entry
 
 
 ### Address#reset() ###
