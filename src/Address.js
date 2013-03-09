@@ -278,11 +278,7 @@ define([
                 ctrlKey = event.ctrlKey || event.metaKey,
                 target = element.target,
                 url =  element.href,
-                options = {
-                    force: !!element.getAttribute('data-url-force'),
-                    replace: !!element.getAttribute('data-url-replace'),
-                    silent: !!element.getAttribute('data-url-silent')
-                };
+                options;
 
             if (!this._isOtherScheme(url)) {
                 // Ignore the event if control is pressed
@@ -296,6 +292,13 @@ define([
                             console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
                         }
                     } else {
+                        // Extract options from attributes
+                        options = {
+                            force: !!element.getAttribute('data-url-force'),
+                            replace: !!element.getAttribute('data-url-replace'),
+                            silent: !!element.getAttribute('data-url-silent')
+                        };
+
                         // Handle the link click
                         this._onNewValueByLinkClick(url, event, options);
                     }
