@@ -294,9 +294,9 @@ define([
                     } else {
                         // Extract options from attributes
                         options = {
-                            force: !!element.getAttribute('data-url-force'),
-                            replace: !!element.getAttribute('data-url-replace'),
-                            silent: !!element.getAttribute('data-url-silent')
+                            force: element.getAttribute('data-url-force') === 'true',
+                            replace: element.getAttribute('data-url-replace') === 'true',
+                            silent: element.getAttribute('data-url-silent') === 'true'
                         };
 
                         // Handle the link click
