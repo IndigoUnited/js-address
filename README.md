@@ -98,7 +98,7 @@ The change event is fired with a single argument, an object with:
 Change event types:
 - `TYPE_EXTERNAL_CHANGE`   if the value changes due to an external event (back, next, etc)
 - `TYPE_INTERNAL_CHANGE`   if the value changes due to a setValue() call
-- `TYPE_LINK_CHANGE`       if the value changes due to user clicking a link click
+- `TYPE_LINK_CHANGE`       if the value changes due to user clicking a link
 
 
 ## Testing ##
