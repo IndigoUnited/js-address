@@ -382,11 +382,6 @@ define([
 
         $abstracts: {
             /**
-             * {@inheritDoc}
-             */
-            generateUrl: function (value, $absolute) {},
-
-            /**
              * Reads and returns the current extracted value of the browser address URL.
              *
              * @param {String} [$path] The path to be used instead of the browser address URL (can be a full url or a relative on)
@@ -402,14 +397,7 @@ define([
              * @param {String}  value      The value to be set
              * @param {Boolean} [$replace] True to replace the last history entry, false otherwise
              */
-            _writeValue: function (value, $replace) {},
-
-            $statics: {
-                /**
-                 * Check if this implementation is compatible with the current environment.
-                 */
-                isCompatible: function () {}
-            }
+            _writeValue: function (value, $replace) {}
         }
     });
 });
