@@ -12,7 +12,7 @@
  * There is also a data-url-force option. When set to true, the value will be changed even if its the current one.
  *
  * Events:
- * - EVENT_CHANGE            fired after each of the ones above (generic event)
+ * - EVENT_CHANGE            fired when the value changes
  * - EVENT_DISABLE           fired when the address is disabled
  * - EVENT_ENABLE            fired when the address is enabled
  *
