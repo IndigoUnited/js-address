@@ -4,7 +4,7 @@
  * Address interface.
  *
  * Events:
- * - EVENT_CHANGE            fired after each of the ones above (generic event)
+ * - EVENT_CHANGE            fired when the value changed
  * - EVENT_DISABLE           fired when the address is disabled
  * - EVENT_ENABLE            fired when the address is enabled
  *
