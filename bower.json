@@ -7,6 +7,6 @@
     "dejavu": "~0.3.1",
     "events-emitter": "git://github.com/IndigoUnited/events-emitter.git",
     "base-adapter": "git://github.com/IndigoUnited/base-adapter.git",
-    "has": "latest"
+    "has": "*"
   }
 }
