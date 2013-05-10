@@ -1,4 +1,4 @@
-# Address
+Address
 ---
 
 Simple library that abstracts the address (url) manipulation.
