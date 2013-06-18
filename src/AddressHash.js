@@ -8,6 +8,9 @@ define([
 
     'use strict';
 
+    /**
+     * {@inheritDoc}
+     */
     function AddressHash(options) {
         Address.call(this, options);
 
