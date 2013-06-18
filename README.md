@@ -143,11 +143,13 @@ Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitt
 If you use RequireJS specify them like this:
 
 ```js
-    paths : {
-        'events-emitter': '../components/events-emitter/src',
-        'has': '../components/has/has'
-        'jquery': '../components/jquery/jquery'
-    },
+// ...
+paths : {
+   'events-emitter': '../components/events-emitter/src',
+   'has': '../components/has/has'
+   'jquery': '../components/jquery/jquery'
+}
+// ...
 ```
 
 ## License
