@@ -49,9 +49,6 @@ define([
             $(document.body).on('click', 'a', this._handleLinkClick);
         }
 
-        // Call events emitter constructor
-        MixableEventsEmitter.call(this);
-
         if (has('debug')) {
             console.info('Initial address value: ' + this._value);
         }
