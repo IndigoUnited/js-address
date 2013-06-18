@@ -6,7 +6,7 @@ This library handles all the browsers quirks and values that contain special mea
 There is two implementations available, one that uses the hash (#) and another one that uses the new HTML5 history API (pushState).
 
 Both implementations also listen to clicks in links and tries to interpret them as values.
-For example, if a link has its `href` set to/foo and the user clicks it, the address value changes to `/foo` and an `change` event of type `TYPE_INTERNAL_CHANGE` will be fired (assuming the hash version).
+For example, if a link has its `href` set to/foo and the user clicks it, the address value changes to `/foo` and an `change` event of type `internal` will be fired (assuming the hash version).
 You can disable this behaviour globally by disabling the `handleLinks` option or locally by setting the `data-url-type` attribute to `external` in the link tag.
 The `data-url-type` can also take the value `internal` which means that preventDefault() will still be called but the actual behaviour should be handled manually.
 Note that in the majority of the cases the library is smart enough to automatically detect if a link is external or internal.
@@ -41,12 +41,12 @@ Optional parameters are prefixed with an $.
 ### Address#disable()
 
 Disables the address. All operations that change the value will be no ops.   
-Fires a `EVENT_DISABLE` event.
+Fires a `disable` event.
 
 ### Address#enable()
 
 Enables the address.   
-Fires a `EVENT_ENABLE` event.
+Fires a `enable` event.
 
 ### Address#getValue()
 
@@ -56,7 +56,7 @@ Return the current value of the address.
 ### Address#setValue(value, $options)
 
 Set a new value into the address.   
-Fires an `EVENT_CHANGE` event of type `TYPE_INTERNAL_CHANGE` if the value differs from the current one.
+Fires an `change` event of type `internal` if the value differs from the current one.
 
 The following options are available:
 - `force`:   true to force the value to be changed even if the value is the same
@@ -102,31 +102,31 @@ Destroys the instance.
 
 ## Events
 
-- `EVENT_CHANGE`           fired after the value changes
-- `EVENT_DISABLE`          fired when the address is disabled
-- `EVENT_ENABLE`           fired when the address is enabled
+- `change`           fired after the value changes
+- `disable`          fired when the address is disabled
+- `enable`           fired when the address is enabled
 
 ### Change event
 
 The change event is fired with a single argument, an object with:
-- `newValue`               the new address value
-- `oldValue`               the old address value
-- `type`                   the type of the change (see bellow)
-- `event`                  the DOM event if the event originated from a link, null otherwise
+- `newValue`         the new address value
+- `oldValue`         the old address value
+- `type`             the type of the change (see bellow)
+- `event`            the DOM event if the event originated from a link, null otherwise
 
 Change event types:
-- `TYPE_EXTERNAL_CHANGE`   if the value changes due to an external event (back, next, etc)
-- `TYPE_INTERNAL_CHANGE`   if the value changes due to a setValue() call
-- `TYPE_LINK_CHANGE`       if the value changes due to user clicking a link
+- `external`         if the value changes due to an external event (back, next, etc)
+- `internal`         if the value changes due to a setValue() call
+- `link`             if the value changes due to user clicking a link
 
 
 ## Testing
 
-The tests are built on top of [mocha](http://visionmedia.github.com/mocha/) test framework and the [expect.js](https://github.com/LearnBoost/expect.js) assert library.
+1. `bower install`
+2. `npm install`
+3. `npm test`
 
-First run `npm install` and `bower install` to install all the tools needed.
-To test via node run `npm test` though they have some limitations.
-To test in the browser, run `node test_server.js` to spawn a local `node server` and open the outputted URL in your browser.
+You will need [bower](https://github.com/bower/bower) installed to install the library dependencies.
 
 ## URL Rewrite
 
@@ -138,29 +138,17 @@ Note that for apache, the mod_rewrite must be enabled.
 
 ## Dependencies
 
-Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitter) and [base-adapter](https://github.com/IndigoUnited/base-adapter).
+Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitter), [jquery](https://github.com/jquery/jquery) and [has](https://github.com/phiggins42/has).
 
 If you use RequireJS specify them like this:
 
 ```js
     paths : {
-        'events-emitter': '../vendor/events-emitter/src',
-        'base-adapter': '../vendor/base-adapter/src/adapters/jquery',   // use one of the available adapters
-        'jquery': '../vendor/jquery/jquery.js'                          // use one of the base libraries
+        'events-emitter': '../components/events-emitter/src',
+        'has': '../components/has/has'
+        'jquery': '../components/jquery/jquery'
     },
 ```
-
-Aditionally you have to specify the following map:
-
-```js
-    map: {
-        '*': {
-            'base-adapter/src': '../vendor/base-adapter/src'
-        }
-    },
-```
-
-
 
 ## License
 

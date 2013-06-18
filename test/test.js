@@ -1,4 +1,7 @@
+/*global describe, it, beforeEach, after*/
+
 define([
+    'expect',
     'src/Address',
     'src/AddressHash',
     'src/AddressHTML5',
@@ -8,7 +11,7 @@ define([
     'mout/string/startsWith',
     'mout/string/endsWith',
     './util/triggerEvent'
-], function (Address, AddressHash, AddressHTML5, has, $, append, startsWith, endsWith, triggerEvent) {
+], function (expect, Address, AddressHash, AddressHTML5, has, $, append, startsWith, endsWith, triggerEvent) {
 
     'use strict';
 
