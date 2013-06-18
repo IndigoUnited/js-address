@@ -126,7 +126,7 @@ The tests are built on top of [mocha](http://visionmedia.github.com/mocha/) test
 
 First run `npm install` and `bower install` to install all the tools needed.
 To test via node run `npm test` though they have some limitations.
-To test in the browser, run `node test_server.js` to spawn a local `node server` and open the outputed URL in your browser.
+To test in the browser, run `node test_server.js` to spawn a local `node server` and open the outputted URL in your browser.
 
 ## URL Rewrite
 
@@ -138,14 +138,12 @@ Note that for apache, the mod_rewrite must be enabled.
 
 ## Dependencies
 
-Address depends on [mout](https://github.com/mout/mout), [dejavu](https://github.com/IndigoUnited/dejavu), [events-emitter](https://github.com/IndigoUnited/events-emitter) and [base-adapter](https://github.com/IndigoUnited/base-adapter).
+Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitter) and [base-adapter](https://github.com/IndigoUnited/base-adapter).
 
 If you use RequireJS specify them like this:
 
 ```js
     paths : {
-        'mout': '../vendor/mout/src'
-        'dejavu': '../vendor/dehavy/dist/amd/strict',                   // use the loose version in production
         'events-emitter': '../vendor/events-emitter/src',
         'base-adapter': '../vendor/base-adapter/src/adapters/jquery',   // use one of the available adapters
         'jquery': '../vendor/jquery/jquery.js'                          // use one of the base libraries

@@ -1,134 +1,133 @@
 /**
  * AddressHash.
- *
- * @author André Cruz <andremiguelcruz@msn.com>
  */
-define(['./Address', 'base-adapter/dom/Events'], function (Address, Events) {
+define([
+    './Address',
+    'jquery'
+], function (Address, $) {
 
     'use strict';
 
-    var AddressHash = Address.extend({
-        $name: 'AddressHash',
+    function AddressHash(options) {
+        Address.call(this, options);
 
-        /**
-         * {@inheritDoc}
-         */
-        _initialize: function ($options) {
-            this.$super($options);
+        // Replace all functions that need to be bound
+        this._onNewValueByExternalEvent = this._onNewValueByExternalEvent.bind(this);
 
-            Events.on(window, 'hashchange', this._onNewValueByExternalEvent);
-        },
+        $(window).on('hashchange', this._onNewValueByExternalEvent);
+    }
 
-        /**
-         * {@inheritDoc}
-         */
-        generateUrl: function (value, $absolute) {
-            // The relative URL does not need to include the location.pathname to work, so we skip it
-            // All the relative URLs start with #
-            var ret = '#' + this._encodeValue(value);
+    AddressHash.prototype = Object.create(Address.prototype);
+    AddressHash.prototype.constructor = AddressHash;
 
-            return $absolute ? this._locationSuhp + location.pathname + ret : ret;
-        },
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.prototype.generateUrl = function (value, absolute) {
+        // The relative URL does not need to include the location.pathname to work, so we skip it
+        // All the relative URLs start with #
+        var ret = '#' + this._encodeValue(value);
 
-        /////////////////////////////////////////////////////////////////////////////////////
+        return absolute ? this._locationSuhp + location.pathname + ret : ret;
+    };
 
-        /**
-         * {@inheritDoc}
-         */
-        _readValue: function ($path) {
-            var hash = $path || location.href,
-                pos = hash.indexOf('#'),
-                ret;
+    /////////////////////////////////////////////////////////////////////////////////////
 
-            hash = pos !== -1 ? hash.substr(pos + 1) : '';
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.prototype._readValue = function (path) {
+        var hash = path || location.href,
+            pos = hash.indexOf('#'),
+            ret;
 
-            ret = decodeURIComponent(hash);
-            ret = ret.replace(/%27/g, '\'');    // This replacement is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=407172
+        hash = pos !== -1 ? hash.substr(pos + 1) : '';
 
-            return ret;
-        },
+        ret = decodeURIComponent(hash);
+        ret = ret.replace(/%27/g, '\'');    // This replacement is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=407172
 
-        /**
-         * {@inheritDoc}
-         */
-        _writeValue: function (value, $replace) {
-            value = '#' + this._encodeValue(value);
+        return ret;
+    };
 
-            if ($replace) {
-                location.replace(value);
-            } else {
-                location.href = value;
-            }
-        },
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.prototype._writeValue = function (value, replace) {
+        value = '#' + this._encodeValue(value);
 
-        /**
-         * Encodes the passed value to be safelly used.
-         *
-         * @param  {String} value The value to be encoded
-         *
-         * @return {String} The encoded value
-         */
-        _encodeValue: function (value) {
-            // Use encodeURI because its similar to encodeURIComponent but preserves some chars (without breaking) and prevents a bug in Safari
-            value = encodeURI(value);
-
-            // Encode the # because encodeURI does not handle it
-            // This is actually only needed in IE and Opera, but we do it in every browser
-            value = value.replace(/#/g, '%23');
-
-            return value;
-        },
-
-        /**
-         * {@inheritDoc}
-         */
-        _isOtherScheme: function (url) {
-            return url.charAt(0) === '#' ? false : this.$super(url);
-        },
-
-        /**
-         * {@inheritDoc}
-         */
-        _onDestroy: function () {
-            Events.off(window, 'hashchange', this._onNewValueByExternalEvent);
-
-            this.$self._instance = null;
-            this.$super();
-        },
-
-        /////////////////////////////////////////////////////////////////////////////////////
-
-        $statics: {
-            _instance: null,
-
-            /**
-             * {@inheritDoc}
-             */
-            isCompatible: function () {
-                // When IE8 is rendering with IE7 mode, it reports has having the event but it does not fire it!
-                // Also IE in file protocol totally messes up when back & forward are clicked
-                var docMode = document.documentMode;
-
-                return ('onhashchange' in window && (docMode == null || docMode > 7) &&
-                       (navigator.userAgent.indexOf('MSIE') === -1 || location.protocol !== 'file:'));
-            },
-
-            /**
-             * Creates a new instance of returns the current initialized  one.
-             *
-             * @param {Object} $options The options
-             *
-             * @return {AddressHash} The address
-             */
-            getInstance: function ($options) {
-                if (!this._instance) {
-                    this._instance = new AddressHash($options);
-                }
-
-                return this._instance;
-            }
+        if (replace) {
+            location.replace(value);
+        } else {
+            location.href = value;
         }
-    });
+    };
+
+    /**
+     * Encodes the passed value to be safelly used.
+     *
+     * @param  {String} value The value to be encoded
+     *
+     * @return {String} The encoded value
+     */
+    AddressHash.prototype._encodeValue = function (value) {
+        // Use encodeURI because its similar to encodeURIComponent but preserves some chars (without breaking) and prevents a bug in Safari
+        value = encodeURI(value);
+
+        // Encode the # because encodeURI does not handle it
+        // This is actually only needed in IE and Opera, but we do it in every browser
+        value = value.replace(/#/g, '%23');
+
+        return value;
+    };
+
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.prototype._isOtherScheme = function (url) {
+        return url.charAt(0) === '#' ? false : Address.prototype._isOtherScheme.call(this, url);
+    };
+
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.prototype._onDestroy = function () {
+        $(window).off('hashchange', this._onNewValueByExternalEvent);
+
+        AddressHash._instance = null;
+        Address.prototype._onDestroy.call(this);
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    AddressHash._instance = null;
+
+    /**
+     * {@inheritDoc}
+     */
+    AddressHash.isCompatible = function () {
+        // When IE8 is rendering with IE7 mode, it reports has having the event but it does not fire it!
+        // Also IE in file protocol totally messes up when back & forward are clicked
+        var docMode = document.documentMode;
+
+        return ('onhashchange' in window && (docMode == null || docMode > 7) &&
+               (navigator.userAgent.indexOf('MSIE') === -1 || location.protocol !== 'file:'));
+    };
+
+    /**
+     * Creates a new instance of returns the current initialized  one.
+     *
+     * @param {Object} $options The options
+     *
+     * @return {AddressHash} The address
+     */
+    AddressHash.getInstance = function (options) {
+        if (!AddressHash._instance) {
+            AddressHash._instance = new AddressHash(options);
+        }
+
+
+        return AddressHash._instance;
+    };
 
     return AddressHash;
 });

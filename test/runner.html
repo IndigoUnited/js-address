@@ -10,7 +10,7 @@
         <script>
             var options = {
                 ui: 'bdd',
-                globals: ['console', 'currentExpression']   // mocha tells that mootools exposes a currentExpression global but I really doubt it..
+                globals: ['console']
             };
 
             if (navigator.userAgent.indexOf('Firefox') !== -1) {
@@ -19,7 +19,11 @@
 
             mocha.setup(options);
 
-            require(['./test']);
+            require({
+                urlArgs: 'bust=' + (+new Date())
+            });
+
+            require(['./runner']);
         </script>
         <style>
         #test-link {

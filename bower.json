@@ -1,12 +1,18 @@
 {
   "name": "address",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "main": "src/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
   "dependencies": {
-    "mout": "~0.3.0",
-    "dejavu": "~0.3.1",
-    "events-emitter": "git://github.com/IndigoUnited/events-emitter.git",
-    "base-adapter": "git://github.com/IndigoUnited/base-adapter.git",
-    "has": "*"
+    "events-emitter": "*",
+    "has": "*",
+    "jquery": "~1.9"
+  },
+  "devDependencies": {
+    "mout": "~0.6.0"
   }
 }
