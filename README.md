@@ -146,11 +146,13 @@ Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitt
 If you use RequireJS specify them like this:
 
 ```js
+// ...
 paths : {
-    'events-emitter': '../components/events-emitter/src',
-    'has': '../components/has/has'
-    'jquery': '../components/jquery/jquery'
-},
+   'events-emitter': '../components/events-emitter/src',
+   'has': '../components/has/has'
+   'jquery': '../components/jquery/jquery'
+}
+// ...
 ```
 
 Note that if you want to support `IE8` you need to also to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and setup it's path in your AMD loader.
