@@ -38,22 +38,22 @@ Options are passed to the constructor. Available ones are:
 
 Optional parameters are prefixed with an $.
 
-### Address#disable()
+### .disable()
 
 Disables the address. All operations that change the value will be no ops.   
 Fires a `disable` event.
 
-### Address#enable()
+### .enable()
 
 Enables the address.   
 Fires a `enable` event.
 
-### Address#getValue()
+### .getValue()
 
 Return the current value of the address.
 
 
-### Address#setValue(value, $options)
+### .setValue(value, $options)
 
 Set a new value into the address.   
 Fires an `change` event of type `internal` if the value differs from the current one.
@@ -66,35 +66,35 @@ The following options are available:
 _NOTE_: These options are also available in data-url-* attributes, e.g.:
 `data-url-force="true"`
 
-### Address#reset()
+### .reset()
 
 Resets the internal state of address.   
 Clears the internal value and any other state.
 
 
-### Address#generateUrl(value, $absolute)
+### .generateUrl(value, $absolute)
 
 Generate an URL from a `value` to be safely used in link tags.   
 By default the generated URL will be relative, unless `$absolute` is true.
 
 
-### Address#on(event, fn, $context)
+### .on(event, fn, $context)
 
 Register an `event` listener `fn` (with the option to pass a `$context`).
 
 
-### Address#once(event, fn, $context)
+### .once(event, fn, $context)
 
 Register an `event` listener `fn` (with the option to pass a `$context`) that runs only once.
 
 
-### Address#off(event, $fn, $context)
+### .off(event, $fn, $context)
 
 Remove `event` listener `$fn` that was added with `$context`.   
 If no `$fn` is passed, removes all listeners for `$event` or all the emitter listeners if no `$event` is passed.
 
 
-### Address#destroy()
+### .destroy()
 
 Destroys the instance.
 
