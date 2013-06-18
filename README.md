@@ -155,7 +155,7 @@ paths : {
 // ...
 ```
 
-Note that if you want to support `IE8` you need to also to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and setup it's path in your AMD loader.
+Note that if you want to support `IE8` you need to also to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and setup its path in your AMD loader.
 
 
 
