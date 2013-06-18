@@ -120,21 +120,22 @@ Change event types:
 - `link`             if the value changes due to user clicking a link
 
 
-## Testing
-
-1. `bower install`
-2. `npm install`
-3. `npm test`
-
-You will need [bower](https://github.com/bower/bower) to install the library dependencies.
-
-
 
 ## URL Rewrite
 
 For the HTML5 version to work correctly, the web server must rewrite all the urls to your front controller.
 An example of an .htaccess (apache) is given.
 Note that for apache, the mod_rewrite must be enabled.
+
+
+
+## Tests
+
+1. `bower install`
+2. `npm install`
+3. `npm test`
+
+You will need [bower](https://github.com/bower/bower) to install the library dependencies.
 
 
 
@@ -155,7 +156,7 @@ paths : {
 // ...
 ```
 
-Note that if you want to support `IE8` you need to also to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and setup its path in your AMD loader.
+Note that if you want to support `IE8` you will need to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and require both `es5-shim` and `es5-sham` with your AMD loader before requiring this library.
 
 
 

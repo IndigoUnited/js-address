@@ -39,11 +39,11 @@
                 urlArgs: 'bust=' + (+new Date())
             });
 
-            require(['has', 'es5-shim', 'es5-sham'], function (has) {
+            require(['jquery', 'has', 'es5-shim', 'es5-sham'], function ($, has) {
                 has.add('debug', !!window.console && !!console.info && !!console.log);
 
-                require(['./test'], function () {
-                    mocha.run();
+                $(document).ready(function () {
+                    require(['./test'], mocha.run.bind(mocha));
                 });
             });
         </script>
