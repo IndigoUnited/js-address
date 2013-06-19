@@ -20,7 +20,7 @@ var address;
 
 if (AddressHTML5.isCompatible()) {
     address = new AddressHTML();
-} else {
+} else if (AddressHash.isCompatible()){
     address = new AddressHash();
 } else {
     throw new Error('Not supported in the current browser!');
