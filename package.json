@@ -6,7 +6,7 @@
     "url": "git://github.com/IndigoUnited/events-emitter"
   },
   "scripts": {
-    "test": "testem ci"
+    "test": "testem ci --skip chromium"
   },
   "devDependencies": {
     "testem": "~0.2.98"
