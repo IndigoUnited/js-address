@@ -1,5 +1,4 @@
-Address
----
+# Address [![Build Status](https://secure.travis-ci.org/IndigoUnited/address.png?branch=master)](http://travis-ci.org/IndigoUnited/address)
 
 Simple library that abstracts the address (url) manipulation.
 This library handles all the browsers quirks and values that contain special meaning in URL's.
@@ -129,16 +128,6 @@ Note that for apache, the mod_rewrite must be enabled.
 
 
 
-## Tests
-
-1. `bower install`
-2. `npm install`
-3. `npm test`
-
-You will need [bower](https://github.com/bower/bower) to install the library dependencies.
-
-
-
 ## How to use
 
 For now, this library is only available in the [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) format.   
@@ -157,6 +146,16 @@ paths : {
 ```
 
 Note that if you want to support `IE8` you will need to install [es5-shim](https://github.com/kriskowal/es5-shim.git) and require both `es5-shim` and `es5-sham` with your AMD loader before requiring this library.
+
+
+
+## Tests
+
+1. `bower install`
+2. `npm install`
+3. `npm test`
+
+You will need [bower](https://github.com/bower/bower) to install the library dependencies.
 
 
 
