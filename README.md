@@ -35,8 +35,6 @@ Options are passed to the constructor. Available ones are:
 
 ## API
 
-Optional parameters are prefixed with an $.
-
 ### .disable()
 
 Disables the address. All operations that change the value will be no ops.   
@@ -52,7 +50,7 @@ Fires a `enable` event.
 Return the current value of the address.
 
 
-### .setValue(value, $options)
+### .setValue(value, [options])
 
 Set a new value into the address.   
 Fires an `change` event of type `internal` if the value differs from the current one.
@@ -71,26 +69,26 @@ Resets the internal state of address.
 Clears the internal value and any other state.
 
 
-### .generateUrl(value, $absolute)
+### .generateUrl(value, [absolute])
 
 Generate an URL from a `value` to be safely used in link tags.   
-By default the generated URL will be relative, unless `$absolute` is true.
+By default the generated URL will be relative, unless `absolute` is true.
 
 
-### .on(event, fn, $context)
+### .on(event, fn, [context])
 
-Register an `event` listener `fn` (with the option to pass a `$context`).
-
-
-### .once(event, fn, $context)
-
-Register an `event` listener `fn` (with the option to pass a `$context`) that runs only once.
+Register an `event` listener `fn` (with the option to pass a `context`).
 
 
-### .off(event, $fn, $context)
+### .once(event, fn, [context])
 
-Remove `event` listener `$fn` that was added with `$context`.   
-If no `$fn` is passed, removes all listeners for `$event` or all the emitter listeners if no `$event` is passed.
+Register an `event` listener `fn` (with the option to pass a `context`) that runs only once.
+
+
+### .off([event], [fn], [context])
+
+Remove `event` listener `$fn` that was added with `context`.   
+If no `fn` is passed, removes all listeners for `event` or all the emitter listeners if no `event` is passed.
 
 
 ### .destroy()
