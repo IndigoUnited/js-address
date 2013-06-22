@@ -3,6 +3,6 @@
   "test_page": "test/test.html",
   "src_files": [
     "src/**/*",
-    "test/*"
+    "test/**/*"
   ]
 }
