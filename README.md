@@ -12,6 +12,8 @@ Note that in the majority of the cases the library is smart enough to automatica
 
 The implementation is not currently supported in < IE8.
 
+
+
 ## Deciding between HTML or Hash
 
 ```js
@@ -26,12 +28,16 @@ if (AddressHTML5.isCompatible()) {
 }
 ```
 
+
+
 ## Options
 
 Options are passed to the constructor. Available ones are:
 
 - handleLinks: true to listen to clicks in links in the DOM and handle them, false otherwise
 - basePath: the base path of the site (e.g.: `/myapp/demo/`), will be used only in `HTML5`
+
+
 
 ## API
 
@@ -40,10 +46,12 @@ Options are passed to the constructor. Available ones are:
 Disables the address. All operations that change the value will be no ops.   
 Fires a `disable` event.
 
+
 ### .enable()
 
 Enables the address.   
 Fires a `enable` event.
+
 
 ### .getValue()
 
@@ -62,6 +70,7 @@ The following options are available:
 
 _NOTE_: These options are also available in data-url-* attributes, e.g.:
 `data-url-force="true"`
+
 
 ### .reset()
 
@@ -103,6 +112,7 @@ Destroys the instance.
 - `disable`          fired when the address is disabled
 - `enable`           fired when the address is enabled
 
+
 ### Change event
 
 The change event is fired with a single argument, an object with:
@@ -115,7 +125,6 @@ Change event types:
 - `external`         if the value changes due to an external event (back, next, etc)
 - `internal`         if the value changes due to a setValue() call
 - `link`             if the value changes due to user clicking a link
-
 
 
 ## URL Rewrite

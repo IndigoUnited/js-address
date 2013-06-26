@@ -26,9 +26,11 @@ define([
      * @param {Object} [options] The options
      */
     function Address(options) {
+        var isCompatible = this.constructor.isCompatible || Address.isCompatible;
+
         this._enabled = true;
 
-        if (!this.constructor.isCompatible())  {
+        if (!isCompatible.call(this.constructor))  {
             throw new Error('Address is not supported in this browser.');
         }
 
