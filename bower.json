@@ -1,6 +1,6 @@
 {
   "name": "address",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "src/",
   "ignore": [
     "**/.*",
@@ -8,7 +8,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "events-emitter": "*",
+    "events-emitter": "~0.1",
     "has": "*",
     "jquery": "~1.9"
   },
