@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "events-emitter": "*",
-    "has": "latest",
+    "has": "*",
     "jquery": "~1.9"
   },
   "devDependencies": {
