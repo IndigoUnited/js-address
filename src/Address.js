@@ -131,7 +131,7 @@ define([
     };
 
     /**
-     * Resets the interal state of address.
+     * Resets the internal state of address.
      * Clears the internal value and any other state.
      *
      * @return {Address} The instance itself to allow chaining
