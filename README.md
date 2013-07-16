@@ -43,13 +43,13 @@ Options are passed to the constructor. Available ones are:
 
 ### .disable()
 
-Disables the address. All operations that change the value will be no ops.   
+Disables the address. All operations that change the value will be no ops.
 Fires a `disable` event.
 
 
 ### .enable()
 
-Enables the address.   
+Enables the address.
 Fires a `enable` event.
 
 
@@ -60,7 +60,7 @@ Return the current value of the address.
 
 ### .setValue(value, [options])
 
-Set a new value into the address.   
+Set a new value into the address.
 Fires an `change` event of type `internal` if the value differs from the current one.
 
 The following options are available:
@@ -74,13 +74,13 @@ _NOTE_: These options are also available in data-url-* attributes, e.g.:
 
 ### .reset()
 
-Resets the internal state of address.   
+Resets the internal state of address.
 Clears the internal value and any other state.
 
 
 ### .generateUrl(value, [absolute])
 
-Generate an URL from a `value` to be safely used in link tags.   
+Generate an URL from a `value` to be safely used in link tags.
 By default the generated URL will be relative, unless `absolute` is true.
 
 
@@ -96,7 +96,7 @@ Register an `event` listener `fn` (with the option to pass a `context`) that run
 
 ### .off([event], [fn], [context])
 
-Remove `event` listener `$fn` that was added with `context`.   
+Remove `event` listener `$fn` that was added with `context`.
 If no `fn` is passed, removes all listeners for `event` or all the emitter listeners if no `event` is passed.
 
 
@@ -137,7 +137,7 @@ Note that for apache, the mod_rewrite must be enabled.
 
 ## How to use
 
-For now, this library is only available in the [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) format.   
+For now, this library is only available in the [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) format.
 Address depends on [events-emitter](https://github.com/IndigoUnited/events-emitter), [jquery](https://github.com/jquery/jquery) and [has](https://github.com/phiggins42/has).
 
 If you use RequireJS specify them like this:
@@ -145,9 +145,9 @@ If you use RequireJS specify them like this:
 ```js
 // ...
 paths : {
-   'events-emitter': '../components/events-emitter/src',
-   'has': '../components/has/has'
-   'jquery': '../components/jquery/jquery'
+   'events-emitter': '../bower_components/events-emitter/src',
+   'has': '../bower_components/has/has'
+   'jquery': '../bower_components/jquery/jquery'
 }
 // ...
 ```
