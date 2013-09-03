@@ -8,9 +8,9 @@
     "bower_components"
   ],
   "dependencies": {
-    "events-emitter": "~0.1",
+    "events-emitter": "~0",
     "has": "*",
-    "jquery": "~1.9"
+    "jquery": "~1.9 || ~2"
   },
   "devDependencies": {
     "mout": "~0.6.0",
