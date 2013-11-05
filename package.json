@@ -9,6 +9,6 @@
     "test": "testem ci --skip chromium"
   },
   "devDependencies": {
-    "testem": "~0.3.17"
+    "testem": "~0.5.0"
   }
 }
