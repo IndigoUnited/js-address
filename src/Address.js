@@ -51,9 +51,7 @@ define([
             $(document.body).on('click', 'a', this._handleLinkClick);
         }
 
-        if (has('debug')) {
-            console.info('Initial address value: ' + this._value);
-        }
+        has('debug') && console.info('Initial address value: ' + this._value);
     }
 
     mixIn(Address.prototype, MixableEventsEmitter.prototype);
@@ -112,18 +110,20 @@ define([
      * @return {Address} The instance itself to allow chaining
      */
     Address.prototype.setValue = function (value, options) {
-        if (this._enabled) {
-            var oldValue;
+        var oldValue;
 
-            options = options || {};
+        if (!this._enabled) {
+            return this;
+        }
 
-            if (this._value !== value || options.force) {
-                oldValue = this._value;
-                this._value = value;
-                this._writeValue(value, options.replace);
-                if (!options.silent) {
-                    this._fireInternalChange(value, oldValue);
-                }
+        options = options || {};
+
+        if (this._value !== value || options.force) {
+            oldValue = this._value;
+            this._value = value;
+            this._writeValue(value, options.replace);
+            if (!options.silent) {
+                this._fireInternalChange(value, oldValue);
             }
         }
 
@@ -235,14 +235,16 @@ define([
      * Function to be invoked when a new value needs to be handled due to an external event.
      */
     Address.prototype._onNewValueByExternalEvent = function () {
-        if (this._enabled) {
-            var value = this._readValue(),
-                oldValue = this._value;
+        if (!this._enabled) {
+            return;
+        }
 
-            if (this._value !== value) {
-                this._value = value;
-                this._fireExternalChange(value, oldValue);
-            }
+        var value = this._readValue(),
+            oldValue = this._value;
+
+        if (this._value !== value) {
+            this._value = value;
+            this._fireExternalChange(value, oldValue);
         }
     };
 
@@ -255,27 +257,29 @@ define([
      * @param {Boolean} [options] True to force the change even if the value is the same
      */
     Address.prototype._onNewValueByLinkClick = function (value, event, options) {
-        if (this._enabled) {
-            var oldValue;
+        var oldValue;
 
-            options = options || {};
+        if (!this._enabled) {
+            return;
+        }
 
-            if (this._isInternalUrl(value)) {
-                event.preventDefault();
+        options = options || {};
 
-                value = this._readValue(value);
-                if (this._value !== value || options.force) {
-                    oldValue = this._value;
-                    this._value = value;
-                    this._writeValue(value, options.replace);
+        if (this._isInternalUrl(value)) {
+            event.preventDefault();
 
-                    if (!options.silent) {
-                        this._fireLinkChange(value, oldValue, event);
-                    }
+            value = this._readValue(value);
+            if (this._value !== value || options.force) {
+                oldValue = this._value;
+                this._value = value;
+                this._writeValue(value, options.replace);
+
+                if (!options.silent) {
+                    this._fireLinkChange(value, oldValue, event);
                 }
-            } else if (has('debug')) {
-                console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
             }
+        } else if (has('debug')) {
+            console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
         }
     };
 
@@ -293,33 +297,41 @@ define([
             url =  element.href,
             options;
 
-        // Do not process if this is an external URL or the preventDefault()
-        // was called on the vent
-        if (event.isDefaultPrevented() || !this._isOtherScheme(url)) {
-            // Ignore the event if control is pressed
-            // Ignore if the link specifies a target different than self
-            // Ignore if the link rel attribute is internal or external
-            if (!ctrlKey && (!target || target === '_self') && type !== 'external') {
-                // If the link is internal, then we just prevent default behaviour
-                if (type === 'internal') {
-                    event.preventDefault();
-                    if (has('debug')) {
-                        console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
-                    }
-                } else {
-                    // Extract options from attributes
-                    options = {
-                        force: element.getAttribute('data-url-force') === 'true',
-                        replace: element.getAttribute('data-url-replace') === 'true',
-                        silent: element.getAttribute('data-url-silent') === 'true'
-                    };
+        // Ignore if preventDefault() was called
+        if (event.isDefaultPrevented()) {
+            has('debug') && console.info('Link poiting to "' + url + '" was ignored because event#preventDefault() was called.');
+            return;
+        }
 
-                    // Handle the link click
-                    this._onNewValueByLinkClick(url, event, options);
-                }
-            } else if (has('debug') && url) {
-                console.info('Link poiting to "' + url + '" was ignored.');
-            }
+
+        // Ignore if link is from other scheme
+        if (this._isOtherScheme(url)) {
+            has('debug') && console.info('Link poiting to "' + url + '" was ignored because it is from other scheme.');
+            return;
+        }
+
+        // Ignore the event if control is pressed
+        // Ignore if the link specifies a target different than self
+        // Ignore if the link rel attribute is internal or external
+        if (ctrlKey || (target && target !== '_self') || type === 'external') {
+            has('debug') && console.info('Link poiting to "' + url + '" was ignored because it was flagged as external.');
+            return;
+        }
+
+        // If the link is internal, then we just prevent default behaviour
+        if (type === 'internal') {
+            event.preventDefault();
+            has('debug') && console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+        } else {
+            // Extract options from attributes
+            options = {
+                force: element.getAttribute('data-url-force') === 'true',
+                replace: element.getAttribute('data-url-replace') === 'true',
+                silent: element.getAttribute('data-url-silent') === 'true'
+            };
+
+            // Handle the link click
+            this._onNewValueByLinkClick(url, event, options);
         }
     };
 
