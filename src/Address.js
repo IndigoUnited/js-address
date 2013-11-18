@@ -293,7 +293,9 @@ define([
             url =  element.href,
             options;
 
-        if (!this._isOtherScheme(url)) {
+        // Do not process if this is an external URL or the preventDefault()
+        // was called on the vent
+        if (event.isDefaultPrevented() || !this._isOtherScheme(url)) {
             // Ignore the event if control is pressed
             // Ignore if the link specifies a target different than self
             // Ignore if the link rel attribute is internal or external
