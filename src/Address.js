@@ -286,11 +286,10 @@ define([
     /**
      * Handles the click event on links.
      *
-     * @param {Event}   event The click event
-     * @param {Element} [el]  The link tag
+     * @param {Event} event The click event
      */
-    Address.prototype._handleLinkClick = function (event, el) {
-        var element = el || event.currentTarget,
+    Address.prototype._handleLinkClick = function (event) {
+        var element = event.currentTarget,
             type = element.getAttribute('data-url-type'),
             ctrlKey = event.ctrlKey || event.metaKey,
             target = element.target,
