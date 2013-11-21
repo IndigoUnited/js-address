@@ -265,21 +265,22 @@ define([
 
         options = options || {};
 
-        if (this._isInternalUrl(value)) {
-            event.preventDefault();
+        if (!this._isInternalUrl(value)) {
+            has('debug') && console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
+            return;
+        }
 
-            value = this._readValue(value);
-            if (this._value !== value || options.force) {
-                oldValue = this._value;
-                this._value = value;
-                this._writeValue(value, options.replace);
+        event.preventDefault();
 
-                if (!options.silent) {
-                    this._fireLinkChange(value, oldValue, event);
-                }
+        value = this._readValue(value);
+        if (this._value !== value || options.force) {
+            oldValue = this._value;
+            this._value = value;
+            this._writeValue(value, options.replace);
+
+            if (!options.silent) {
+                this._fireLinkChange(value, oldValue, event);
             }
-        } else if (has('debug')) {
-            console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
         }
     };
 
