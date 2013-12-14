@@ -51,7 +51,7 @@ define([
             $(document.body).on('click', 'a', this._handleLinkClick);
         }
 
-        has('debug') && console.info('Initial address value: ' + this._value);
+        has('debug') && console.info('[address] Initial address value: ' + this._value);
     }
 
     mixIn(Address.prototype, MixableEventsEmitter.prototype);
@@ -266,7 +266,7 @@ define([
         options = options || {};
 
         if (!this._isInternalUrl(value)) {
-            has('debug') && console.info('Link poiting to "' + value + '" was automatically interpreted as external.');
+            has('debug') && console.info('[address] Link poiting to "' + value + '" was automatically interpreted as external.');
             return;
         }
 
@@ -299,14 +299,14 @@ define([
 
         // Ignore if preventDefault() was called
         if (event.isDefaultPrevented()) {
-            has('debug') && console.info('Link poiting to "' + url + '" was ignored because event#preventDefault() was called.');
+            has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because event#preventDefault() was called.');
             return;
         }
 
 
         // Ignore if link is from other scheme
         if (this._isOtherScheme(url)) {
-            has('debug') && console.info('Link poiting to "' + url + '" was ignored because it is from other scheme.');
+            has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it is from other scheme.');
             return;
         }
 
@@ -314,14 +314,14 @@ define([
         // Ignore if the link specifies a target different than self
         // Ignore if the link rel attribute is internal or external
         if (ctrlKey || (target && target !== '_self') || type === 'external') {
-            has('debug') && console.info('Link poiting to "' + url + '" was ignored because it was flagged as external.');
+            has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it was flagged as external.');
             return;
         }
 
         // If the link is internal, then we just prevent default behaviour
         if (type === 'internal') {
             event.preventDefault();
-            has('debug') && console.info('Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
+            has('debug') && console.info('[address] Link poiting to "' + url + '" is flagged as internal and as such event#preventDefault() was called on the event.');
         } else {
             // Extract options from attributes
             options = {
@@ -343,7 +343,7 @@ define([
      */
     Address.prototype._fireInternalChange = function (value, oldValue) {
         if (has('debug')) {
-            console.info('Value changed to ' + value + ' (internally)');
+            console.info('[address] Value changed to ' + value + ' (internally)');
         }
 
         this._emit('change', {
@@ -361,7 +361,7 @@ define([
      */
     Address.prototype._fireExternalChange = function (value, oldValue) {
         if (has('debug')) {
-            console.info('Value changed to ' + value + ' (externally)');
+            console.info('[address] Value changed to ' + value + ' (externally)');
         }
 
         this._emit('change', {
@@ -380,7 +380,7 @@ define([
      */
     Address.prototype._fireLinkChange = function (value, oldValue, event) {
         if (has('debug')) {
-            console.info('Value changed to ' + value + ' (link)');
+            console.info('[address] Value changed to ' + value + ' (link)');
         }
 
         this._emit('change', {
