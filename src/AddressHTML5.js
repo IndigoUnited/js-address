@@ -26,7 +26,7 @@ define([
         // Encode it to be valid in the comparisons because it can contain special chars
         this._basePath = this._encodeValue(options.basePath);
         this._basePath = '/' + this._trimLeadingSlashes(this._basePath);
-        this._basePath = this._trimTrailingSlashes(this._basePath) + '/';
+        this._basePath = this._trimTrailingSlashes(this._basePath);
 
         this._baseElement = document.getElementsByTagName('base');
 
@@ -54,7 +54,7 @@ define([
      * {@inheritDoc}
      */
     AddressHTML5.prototype.generateUrl = function (value, absolute) {
-        var ret = this._basePath + this._encodeValue(this._trimLeadingSlashes(value));
+        var ret = this._basePath + '/' + this._encodeValue(this._trimLeadingSlashes(value));
 
         return absolute ? this._locationSuhp + ret : ret;
     };
@@ -140,7 +140,7 @@ define([
         // Extract the portion after the full base path
         basePos = parsedPath.indexOf(this._basePath);
         if (basePos !== -1) {
-            parsedPath = parsedPath.substr(basePos + this._basePath.length);
+            parsedPath = parsedPath.substr(basePos + this._basePath.length + 1);
         } else {
             throw new Error('Can\'t parse external URL: ' + (path || location.href));
         }
@@ -164,7 +164,7 @@ define([
      * {@inheritDoc}
      */
     AddressHTML5.prototype._writeValue = function (value, replace) {
-        var path = this._basePath + this._encodeValue(value);
+        var path = this._basePath + '/' + this._encodeValue(value);
 
         if (replace) {
             history.replaceState(emptyObj, emptyStr, path);
