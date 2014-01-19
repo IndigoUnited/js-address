@@ -5,8 +5,8 @@ define(function () {
     /**
      * Verifies if a string starts with another.
      *
-     * @param  {String} str    The string that will be checked
-     * @param  {String} prefix The prefix to check
+     * @param {String} str    The string that will be checked
+     * @param {String} prefix The prefix to check
      *
      * @return {Boolean} True if it starts, false otherwise
      */

@@ -3,10 +3,10 @@ define(function () {
     'use strict';
 
     /**
-     * Copies properies from an object to another.
+     * Copies properties from an object to another.
      *
-     * @param  {Object} target The target object
-     * @param  {[type]} origin The object to copy from
+     * @param {Object} target The target object
+     * @param {Object} origin The object to copy from
      *
      * @return {Object} The target object
      */
