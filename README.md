@@ -146,7 +146,7 @@ If you use RequireJS specify them like this:
 // ...
 paths : {
    'events-emitter': '../bower_components/events-emitter/src',
-   'has': '../bower_components/has/has'
+   'has': '../bower_components/has/has',
    'jquery': '../bower_components/jquery/jquery'
 }
 // ...
