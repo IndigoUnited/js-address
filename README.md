@@ -1,4 +1,4 @@
-# Address [![Build Status](https://secure.travis-ci.org/IndigoUnited/address.png?branch=master)](http://travis-ci.org/IndigoUnited/address)
+# Address [![Build Status](https://travis-ci.org/IndigoUnited/js-address.svg?branch=master)](https://travis-ci.org/IndigoUnited/js-address)
 
 Simple library that abstracts the address (url) manipulation.
 This library handles all the browsers quirks and values that contain special meaning in URL's.
@@ -146,7 +146,7 @@ If you use RequireJS specify them like this:
 // ...
 paths : {
    'events-emitter': '../bower_components/events-emitter/src',
-   'has': '../bower_components/has/has'
+   'has': '../bower_components/has/has',
    'jquery': '../bower_components/jquery/jquery'
 }
 // ...
