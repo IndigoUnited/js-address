@@ -1,4 +1,4 @@
-# Address [![Build Status](https://secure.travis-ci.org/IndigoUnited/address.png?branch=master)](http://travis-ci.org/IndigoUnited/address)
+# Address [![Build Status](https://travis-ci.org/IndigoUnited/js-address.svg?branch=master)](https://travis-ci.org/IndigoUnited/js-address)
 
 Simple library that abstracts the address (url) manipulation.
 This library handles all the browsers quirks and values that contain special meaning in URL's.
