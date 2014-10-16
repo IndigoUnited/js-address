@@ -101,7 +101,7 @@ define([
      *
      * The default implementation should handle these options:
      *  - force:  true to force the value to be changed even if the value is the same
-     *  - silent: true to change the value with firing the change event
+     *  - silent: true to change the value without firing the change event
      *  - replace: true to replace the latest history entry instead of appending
      *
      * @param {String} value     The value to be set
