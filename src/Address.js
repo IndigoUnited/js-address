@@ -72,6 +72,7 @@ define([
 
     /**
      * Disables the address.
+     * Note that the links will still be default prevented.
      *
      * @return {Address} The instance itself to allow chaining
      */
@@ -259,18 +260,21 @@ define([
     Address.prototype._onNewValueByLinkClick = function (value, event, options) {
         var oldValue;
 
-        if (!this._enabled) {
-            return;
-        }
-
         options = options || {};
 
         if (!this._isInternalUrl(value)) {
-            has('debug') && console.info('[address] Link poiting to "' + value + '" was automatically interpreted as external.');
+            if (this._enabled) {
+                has('debug') && console.info('[address] Link poiting to "' + value + '" was automatically interpreted as external.');
+            }
+
             return;
         }
 
         event.preventDefault();
+
+        if (!this._enabled) {
+            return;
+        }
 
         value = this._readValue(value);
         if (this._value !== value || options.force) {
