@@ -114,7 +114,6 @@ define([
     }
 
     function testAddressHTML5() {
-
         if (address) {
             address.destroy();
         }
@@ -166,7 +165,6 @@ define([
     }
 
     function run(address) {
-
         address.on('change', function (obj) {
             switch (obj.type) {
             case 'internal':
@@ -185,17 +183,14 @@ define([
         });
 
         it('should be able to read the initial value with getValue()', function () {
-
             if (has('debug')) {
                 console.log('> should be able to read the initial value with getValue()');
             }
 
             expect(address.getValue()).to.be.equal(address instanceof AddressHash ? initialValue + '?wtf#wtf' : initialValue);
-
         });
 
         it('should change the value if setValue() is called with a new value', function () {
-
             if (has('debug')) {
                 console.log('> should change the value if setValue is called with a new value');
             }
@@ -213,11 +208,9 @@ define([
 
             address.setValue('#second');
             expect(address.getValue()).to.be.equal('#second');
-
         });
 
         it('should fire the internal event if setValue() is called with a new value', function (done) {
-
             if (has('debug')) {
                 console.log('> should fire the internal event if setValue is called with a new value');
             }
@@ -238,11 +231,9 @@ define([
 
                 done();
             }, timeout);
-
         });
 
         it('should fire the external event if back or next buttons are pressed or user typed a new value', function (done) {
-
             if (has('debug')) {
                 console.log('> should fire the external event if back or next buttons are pressed or user typed a new value');
             }
@@ -290,11 +281,9 @@ define([
                     }, timeout);
                 }, timeout);
             }
-
         });
 
         it('should fire the link change if the user clicks an application link', function (done) {
-
             if (has('debug')) {
                 console.log('> should fire the link change if the user clicks an application link');
             }
@@ -332,11 +321,9 @@ define([
                     done();
                 }, timeout);
             }
-
         });
 
         it('should ignore clicks on links with data-url-type=external|internal', function (done) {
-
             if (has('debug')) {
                 console.log('> should ignore links with data-url-type=external|internal');
             }
@@ -375,11 +362,9 @@ define([
                 });
 
             }, timeout);
-
         });
 
         it('should ignore clicks on links with target different than _self', function (done) {
-
             if (has('debug')) {
                 console.log('> should ignore links with target different than _self');
             }
@@ -400,11 +385,9 @@ define([
                 expect(stack).to.eql([]);
                 done();
             }, timeout);
-
         });
 
         it('should ignore clicks on external links automatically', function (done) {
-
             if (has('debug')) {
                 console.log('> should ignore external links automatically');
             }
@@ -426,11 +409,33 @@ define([
                 expect(stack).to.eql([]);
                 done();
             }, timeout * 2);
+        });
 
+        it('should ignore clicks on links with the download attribute set', function (done) {
+            if (has('debug')) {
+                console.log('> should ignore external links automatically');
+            }
+
+            $(document.body).on('click', preventDefault);
+
+            link.setAttribute('download', '');
+
+            link.href = '/first';
+            click();
+            link.href = '/second';
+            click();
+
+            link.removeAttribute('download');
+
+            $(document.body).off('click', preventDefault);
+
+            setTimeout(function () {
+                expect(stack).to.eql([]);
+                done();
+            }, timeout * 2);
         });
 
         it('should work with special characters passed to setValue()', function (done) {
-
             if (has('debug')) {
                 console.log('should work with special characters');
             }
@@ -514,11 +519,9 @@ define([
             for (x = 0; x < length; x += 1) {
                 setTimeout(doBack.bind(null, x), timeout + ((x + 1) * timeout));
             }
-
         });
 
         it('should generate the correct relative and absolute URLs (also with special chars)', function (done) {
-
             if (has('debug')) {
                 console.log('should generate the correct relative and absolute URLs');
             }
@@ -618,7 +621,6 @@ define([
 
             start(false);
         });
-
     }
 
     testAddressHash();

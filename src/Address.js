@@ -296,10 +296,16 @@ define([
     Address.prototype._handleLinkClick = function (event) {
         var element = event.currentTarget,
             type = element.getAttribute('data-url-type'),
+            download = element.getAttribute('download') != null,
             ctrlKey = event.ctrlKey || event.metaKey,
             target = element.target,
             url =  element.href,
             options;
+
+        // Ignore the event if control is pressed
+        if (ctrlKey) {
+            return;
+        }
 
         // Ignore if preventDefault() was called
         if (event.isDefaultPrevented()) {
@@ -307,18 +313,22 @@ define([
             return;
         }
 
-
         // Ignore if link is from other scheme
         if (this._isOtherScheme(url)) {
             has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it is from other scheme.');
             return;
         }
 
-        // Ignore the event if control is pressed
         // Ignore if the link specifies a target different than self
         // Ignore if the link rel attribute is internal or external
-        if (ctrlKey || (target && target !== '_self') || type === 'external') {
+        if ((target && target !== '_self') || type === 'external') {
             has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it was flagged as external.');
+            return;
+        }
+
+        // Ignore if the link has a download attribute
+        if (download) {
+            has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it has a download attribute.');
             return;
         }
 
