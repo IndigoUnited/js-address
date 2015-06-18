@@ -42,7 +42,7 @@ define([
             basePath: location.pathname
         }, options);
 
-        // Cache the location scheme + userinfo + host + port
+        // Cache the location scheme + host + port
         this._locationShp = this._analyzeUrl(location.href).shp;
 
         // Validate base path
