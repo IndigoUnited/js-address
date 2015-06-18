@@ -5,19 +5,21 @@ define([
     'src/Address',
     'src/AddressHash',
     'src/AddressHTML5',
+    'src/util/trimSlashes',
     'has',
     'jquery',
     'mout/array/append',
     'mout/string/startsWith',
     'mout/string/endsWith',
     './util/triggerEvent'
-], function (expect, Address, AddressHash, AddressHTML5, has, $, append, startsWith, endsWith, triggerEvent) {
+], function (expect, Address, AddressHash, AddressHTML5, trimSlashes, has, $, append, startsWith, endsWith, triggerEvent) {
 
     'use strict';
 
     // TODO: test enable() & disable()
     // TODO: test silent, force, replace options of setValue()
     // TODO: test handleLinks address options
+    // TODO: test basePath with invalid chars
 
     var stack,
         values,
@@ -55,14 +57,7 @@ define([
                 basePath: 'google.com/'
             },
             {
-                basePath: '/' + location.host + '/'
-            },
-            {
-                basePath: '/' + location.hostname + ':80/'
-            },
-            {
-                basePath: '/some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С你好/',
-                encodedBasePath: '/some\'!%3F%5C%7C%22@%23%C2%A3$%C2%A7%2520&/%7B%7D%5B%5D()+=%C2%BB%C2%AB%C2%B4%60%20~%C2%BA-_:.;,*/%C3%A4%C3%84%C3%96%C3%B6%C3%9C%C3%BC%C3%9F%E2%82%AC%E2%80%94%D0%A1%E4%BD%A0%E5%A5%BD/'
+                basePath: '/' + location.hostname
             }
         ];
 
@@ -198,15 +193,13 @@ define([
             address.setValue('first');
             expect(address.getValue()).to.be.equal('first');
 
-            if (address instanceof AddressHash) {
-                address.setValue('/first');
-                expect(address.getValue()).to.be.equal('/first');
-            }
+            address.setValue('/first');
+            expect(address.getValue()).to.be.equal('first');
 
             address.setValue('#second');
             expect(address.getValue()).to.be.equal('#second');
 
-            address.setValue('#second');
+            address.setValue('/#second');
             expect(address.getValue()).to.be.equal('#second');
         });
 
@@ -217,17 +210,12 @@ define([
 
             address.setValue('first');
             address.setValue('/first');
-            address.setValue('#second');
-            address.setValue('#second');
+            address.setValue('second');
+            address.setValue('/second');
 
             setTimeout(function () {
-                if (address instanceof AddressHash) {
-                    expect(stack).to.eql(['i', 'c', 'i', 'c', 'i', 'c']);
-                    expect(values).to.eql(['first', '/first', '#second']);
-                } else {
-                    expect(stack).to.eql(['i', 'c', 'i', 'c']);
-                    expect(values).to.eql(['first', '#second']);
-                }
+                expect(stack).to.eql(['i', 'c', 'i', 'c']);
+                expect(values).to.eql(['first', 'second']);
 
                 done();
             }, timeout);
@@ -238,49 +226,24 @@ define([
                 console.log('> should fire the external event if back or next buttons are pressed or user typed a new value');
             }
 
-            if (address instanceof AddressHash) {
-                address.setValue('one');
-                address.setValue('second');
-                address.setValue('/second');
-                address.setValue('third');
+            address.setValue('one');
+            address.setValue('second');
+            address.setValue('/second');
+            address.setValue('third');
+
+            setTimeout(function () {
+                history.back();
 
                 setTimeout(function () {
                     history.back();
 
                     setTimeout(function () {
-                        history.back();
-
-                        setTimeout(function () {
-                            history.back();
-
-                            setTimeout(function () {
-                                expect(stack).to.eql(['i', 'c', 'i', 'c', 'i', 'c', 'i', 'c', 'e', 'c', 'e', 'c', 'e', 'c']);
-                                expect(values).to.eql(['one', 'second', '/second', 'third', '/second', 'second', 'one']);
-                                done();
-                            }, timeout);
-                        }, timeout);
+                        expect(stack).to.eql(['i', 'c', 'i', 'c', 'i', 'c', 'e', 'c', 'e', 'c']);
+                        expect(values).to.eql(['one', 'second', 'third', 'second', 'one']);
+                        done();
                     }, timeout);
                 }, timeout);
-            } else {
-                address.setValue('one');
-                address.setValue('second');
-                address.setValue('/second');
-                address.setValue('third');
-
-                setTimeout(function () {
-                    history.back();
-
-                    setTimeout(function () {
-                        history.back();
-
-                        setTimeout(function () {
-                            expect(stack).to.eql(['i', 'c', 'i', 'c', 'i', 'c', 'e', 'c', 'e', 'c']);
-                            expect(values).to.eql(['one', 'second', 'third', 'second', 'one']);
-                            done();
-                        }, timeout);
-                    }, timeout);
-                }, timeout);
-            }
+            }, timeout);
         });
 
         it('should fire the link change if the user clicks an application link', function (done) {
@@ -299,7 +262,7 @@ define([
 
                 setTimeout(function () {
                     expect(stack).to.eql(['l', 'c', 'l', 'c', 'l', 'c']);
-                    expect(values).to.eql(['first', '#second', '/second']);
+                    expect(values).to.eql(['first', '#second', 'second']);
                     done();
                 }, timeout);
             } else {
@@ -443,23 +406,17 @@ define([
             this.timeout(10000);
 
             var special,
+                expected,
                 length,
                 x;
 
-            if (address instanceof AddressHash) {
-                special = [
-                    'some/url', '/some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
-                    'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
-                    '你好', '良い', 'хорошо'
-                ];
-            } else {
-                special = [
-                    'some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
-                    'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
-                    '你好', '良い', 'хорошо'
-                ];
-            }
+            special = [
+                '/some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
+                'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
+                '你好', '良い', 'хорошо/'
+            ];
 
+            expected = special.map(function (url) { return trimSlashes(url); });
             length = special.length;
 
             function doBack(x) {
@@ -472,8 +429,7 @@ define([
 
             function compare() {
                 setTimeout(function () {
-
-                    var array = append(append([], special), special.slice(0, -1).reverse()),
+                    var array = append(append([], expected), expected.slice(0, -1).reverse()),
                         tmp;
 
                     expect(values).to.eql(array);
@@ -481,12 +437,11 @@ define([
                     // Do a final test with special chars in links
                     // This is redudant because the test bellow also does test it but this is a more aggressive one
                     values = [];
+                    tmp = 'some\'!?\\|"@#£$§%20&/{}[]()С+=»«´` ~º-_:.;,*/äÄÖöÜüß€—你好良いхорошо';
 
                     if (address instanceof AddressHash) {
-                        tmp = 'some\'!?\\|"@#£$§&/{}[]()С+=»«´`~º-_:.;,*/äÄÖöÜüß€—你好良いхорошо';
-                        link.href = '#' + tmp;
+                        link.href = '#' + encodeURIComponent(tmp);
                     } else {
-                        tmp = 'some\'!?\\|"@#£$§%20&/{}[]()С+=»«´` ~º-_:.;,*/äÄÖöÜüß€—你好良いхорошо';
                         link.href = pathname + encodeURIComponent(tmp);
                     }
 
@@ -529,25 +484,19 @@ define([
             this.timeout(10000);
 
             var special,
+                expected,
                 length,
                 x,
                 url,
                 absolute;
 
-            if (address instanceof AddressHash) {
-                special = [
-                    'some/url', '/some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
-                    'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
-                    '你好', '良い', 'хорошо'
-                ];
-            } else {
-                special = [
-                    'some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
-                    'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
-                    '你好', '良い', 'хорошо'
-                ];
-            }
+            special = [
+                '/some/url', 'some#url', '#someurl', 'some%2Furl', 'some%5Curl', 'some%url', 'some%25',
+                'some\'!?\\|"@#£$§%20&/{}[]()+=»«´` ~º-_:.;,*/äÄÖöÜüß€—С',
+                '你好', '良い', 'хорошо/'
+            ];
 
+            expected = special.map(function (url) { return trimSlashes(url); });
             length = special.length;
 
             function doBack(x) {
@@ -560,8 +509,7 @@ define([
 
             function compare() {
                 setTimeout(function () {
-
-                    var array = append(append([], special), special.slice(0, -1).reverse());
+                    var array = append(append([], expected), expected.slice(0, -1).reverse());
 
                     expect(values).to.eql(array);
                     if (absolute) {
@@ -586,7 +534,6 @@ define([
                 length = special.length;
 
                 for (x = 0; x < length; x += 1) {
-
                     url = address.generateUrl(special[x], absolute);
 
                     if (!absolute) {

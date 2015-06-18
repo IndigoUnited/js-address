@@ -3,8 +3,9 @@
  */
 define([
     './Address',
-    'jquery'
-], function (Address, $) {
+    'jquery',
+    './util/trimSlashes'
+], function (Address, $, trimSlashes) {
 
     'use strict';
 
@@ -29,27 +30,31 @@ define([
     AddressHash.prototype.generateUrl = function (value, absolute) {
         // The relative URL does not need to include the location.pathname to work, so we skip it
         // All the relative URLs start with #
-        var ret = '#' + this._encodeValue(value);
+        var ret = '#' + this._encodeValue(trimSlashes(value));
 
-        return absolute ? this._locationSuhp + location.pathname + ret : ret;
+        if (!absolute) {
+            return ret;
+        }
+
+        return this._locationShp + '/' +  this._basePath + ret;
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////
+    // ---------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
     AddressHash.prototype._readValue = function (path) {
         var hash = path || location.href,
-            pos = hash.indexOf('#'),
-            ret;
+            pos = hash.indexOf('#');
 
+        // Get the hash
         hash = pos !== -1 ? hash.substr(pos + 1) : '';
 
-        ret = decodeURIComponent(hash);
-        ret = ret.replace(/%27/g, '\'');    // This replacement is a workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=407172
+        // Trim slashes from the value
+        hash = trimSlashes(hash);
 
-        return ret;
+        return decodeURIComponent(hash);
     };
 
     /**
@@ -86,13 +91,6 @@ define([
     /**
      * {@inheritDoc}
      */
-    AddressHash.prototype._isOtherScheme = function (url) {
-        return url.charAt(0) === '#' ? false : Address.prototype._isOtherScheme.call(this, url);
-    };
-
-    /**
-     * {@inheritDoc}
-     */
     AddressHash.prototype._onDestroy = function () {
         $(window).off('hashchange', this._onNewValueByExternalEvent);
 
@@ -100,7 +98,7 @@ define([
         Address.prototype._onDestroy.call(this);
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////
+    // ---------------------------------------------------------------
 
     AddressHash._instance = null;
 

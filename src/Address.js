@@ -15,10 +15,14 @@ define([
     'events-emitter/MixableEventsEmitter',
     'has',
     'jquery',
-    './util/mixIn'
-], function (MixableEventsEmitter, has, $, mixIn) {
+    './util/mixIn',
+    './util/trimSlashes',
+    './util/parseUrl'
+], function (MixableEventsEmitter, has, $, mixIn, trimSlashes, parseUrl) {
 
     'use strict';
+
+    var anchorEl = document.createElement('a');
 
     /**
      * Constructor.
@@ -28,17 +32,28 @@ define([
     function Address(options) {
         var isCompatible = this.constructor.isCompatible || Address.isCompatible;
 
-        this._enabled = true;
-
         if (!isCompatible.call(this.constructor))  {
             throw new Error('Address is not supported in this browser.');
         }
 
         // handleLinks can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
-        this._options = mixIn({ handleLinks: true }, options || {});
+        this._options = mixIn({
+            handleLinks: true,
+            basePath: location.pathname
+        }, options);
 
         // Cache the location scheme + userinfo + host + port
-        this._locationSuhp = this._extractSuhpFromUrl(location.href);
+        this._locationShp = this._analyzeUrl(location.href).shp;
+
+        // Validate base path
+        // We don't allow strange chars because they some browsers return href decoded and
+        // comparisons will fail (e..g: Safari 5)
+        if (!/^[a-z0-9_\-\/\.]+$/.test(this._options.basePath)) {
+            throw new Error('Invalid base path, it can only be letters, numbers or _-/.');
+        }
+
+        // The base path should have slashed trimmed
+        this._basePath = trimSlashes(this._options.basePath);
 
         // Grab the current value
         this._value = this._readValue();
@@ -51,6 +66,7 @@ define([
             $(document.body).on('click', 'a', this._handleLinkClick);
         }
 
+        this._enabled = true;
         has('debug') && console.info('[address] Initial address value: ' + this._value);
     }
 
@@ -117,12 +133,14 @@ define([
             return this;
         }
 
+        value = trimSlashes(value);
         options = options || {};
 
         if (this._value !== value || options.force) {
             oldValue = this._value;
             this._value = value;
             this._writeValue(value, options.replace);
+
             if (!options.silent) {
                 this._fireInternalChange(value, oldValue);
             }
@@ -166,70 +184,42 @@ define([
         }
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////
+    // ---------------------------------------------------------------
 
     /**
-     * Checks if a given URL is absolute.
-     *
-     * @param {String} url The url to check
-     *
-     * @return {Boolean} True if it's absolute, false otherwise
-     */
-    Address.prototype._isAbsoluteUrl = function (url) {
-        var regExp = this.constructor._isAbsoluteUrlRegExp || Address._isAbsoluteUrlRegExp;
-
-        return regExp.test(url);
-    };
-
-    /**
-     * Extracts the scheme + userinfo + hostname + port from an URL
+     * Analyzes the url, returning an object with its shp (scheme + host + port) and pathname.
      *
      * @param {String} url The url to parse
      *
-     * @return {String} The URL 'suhp' part or null if it is invalid
+     * @return {Object} The analyzed URL object
      */
-    Address.prototype._extractSuhpFromUrl = function (url) {
-        var regExp = this.constructor._urlParserRegExp || Address._urlParserRegExp,
-            matches = regExp.exec(url), // see: https://gist.github.com/2428561
-            shup = matches[3];
+    Address.prototype._analyzeUrl = function (url) {
+        var parsedUrl;
 
-        shup = matches[3];
+        // Use an anchor tag to parse the URL for us; this will resolve relative URLs etc
+        // Then we double parse the URL because we cannot use .pathname: it gets decoded in some
+        // old browsers, including android stock browser
+        anchorEl.href = url;                  // Browser based parser
+        parsedUrl = parseUrl(anchorEl.href);  // Regular expression based parser
 
-        return shup && shup.length ? shup : null;
+        return {
+            shp: parsedUrl.protocol + parsedUrl.doubleSlash + parsedUrl.host,
+            pathname: '/' + trimSlashes.leading(parsedUrl.pathname)
+        };
     };
 
     /**
      * Checks if a given URL can be handled internally.
-     * Returns false for relative URLs.
-     * For absolute URLs, returns true if the scheme + userinfo + hostname + port is the same as the browser.
+     * Returns true for relative URLs.
+     * For absolute URLs, returns true if the scheme + hostname + port is the same as the browser.
      * Subclasses might need to override this method.
      *
      * @return {Boolean} True if it is external, false otherwise
      */
     Address.prototype._isInternalUrl = function (url) {
-        // We first check if the URL is absolute because the _extractSuhpFromUrl function is somewhat slower
-        // So if an URL is absolute we do not need to run it
-        return !this._isAbsoluteUrl(url) || this._extractSuhpFromUrl(url) === this._locationSuhp;
-    };
+        var analyzed = this._analyzeUrl(url);
 
-    /**
-     * Checks if a given URL belongs to another scheme, other than the http(s) one.
-     *
-     * @param {String} url The URL
-     *
-     * @return {Boolean} True if is, false otherwise
-     */
-    Address.prototype._isOtherScheme = function (url) {
-        var pos = url.indexOf('://'),
-            scheme;
-
-        if (pos === -1) {
-            return false;
-        }
-
-        scheme = url.substr(0, pos);
-
-        return scheme !== 'http' && scheme !== 'https';
+        return analyzed.shp === this._locationShp && analyzed.pathname.indexOf('/' + this._basePath) === 0;
     };
 
     /**
@@ -260,8 +250,6 @@ define([
     Address.prototype._onNewValueByLinkClick = function (value, event, options) {
         var oldValue;
 
-        options = options || {};
-
         if (!this._isInternalUrl(value)) {
             if (this._enabled) {
                 has('debug') && console.info('[address] Link poiting to "' + value + '" was automatically interpreted as external.');
@@ -277,6 +265,8 @@ define([
         }
 
         value = this._readValue(value);
+        options = options || {};
+
         if (this._value !== value || options.force) {
             oldValue = this._value;
             this._value = value;
@@ -310,12 +300,6 @@ define([
         // Ignore if preventDefault() was called
         if (event.isDefaultPrevented()) {
             has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because event#preventDefault() was called.');
-            return;
-        }
-
-        // Ignore if link is from other scheme
-        if (this._isOtherScheme(url)) {
-            has('debug') && console.info('[address] Link poiting to "' + url + '" was ignored because it is from other scheme.');
             return;
         }
 
@@ -419,12 +403,13 @@ define([
         this.off();
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////
+    // ---------------------------------------------------------------
 
     /**
      * Reads and returns the current extracted value of the browser address URL.
+     * Note that the returned value should not contain trailing slashes.
      *
-     * @param {String} [path] The path to be used instead of the browser address URL (can be a full url or a relative on)
+     * @param {String} [path] The path to be used instead of the browser address URL (can be a full URL or a relative on)
      *
      * @return {String} The extracted value
      */
@@ -443,10 +428,7 @@ define([
         throw new Error('This method must be implemented.');
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////
-
-    Address._isAbsoluteUrlRegExp = /^[a-z]{1,7}:\/\//i;
-    Address._urlParserRegExp = /^(((([^:\/#\?]+:)?(?:(\/\/)((?:(([^:@\/#\?]+)(?:\:([^:@\/#\?]+))?)@)?(([^:\/#\?\]\[]+|\[[^\/\]@#?]+\])(?:\:([0-9]+))?))?)?)?((\/?(?:[^\/\?#]+\/+)*)([^\?#]*)))?(\?[^#]+)?)(#.*)?/;
+    // ---------------------------------------------------------------
 
     Address.isCompatible = function () {
         throw new Error('This method must be implemented.');
