@@ -52,7 +52,7 @@ define([
             throw new Error('Invalid base path, it can only be letters, numbers or _-/.');
         }
 
-        // The base path should have slashed trimmed
+        // The base path should have slashes trimmed
         this._basePath = trimSlashes(this._options.basePath);
 
         // Grab the current value

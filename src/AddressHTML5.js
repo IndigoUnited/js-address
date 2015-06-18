@@ -61,9 +61,6 @@ define([
             parsed = parsed.substr(basePos + this._basePath.length + 1);
         }
 
-        // Trim slashes from the value
-        parsed = trimSlashes(parsed);
-
         // Remove the portion after ? if any
         tmp = parsed.indexOf('?');
         if (tmp !== -1) {
@@ -75,6 +72,9 @@ define([
                 parsed = parsed.substr(0, tmp);
             }
         }
+
+        // Trim slashes from the value
+        parsed = trimSlashes(parsed);
 
         return decodeURIComponent(parsed);
     };

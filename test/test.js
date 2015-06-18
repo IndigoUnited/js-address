@@ -551,8 +551,6 @@ define([
                             expect(startsWith(url, location.pathname)).to.be.ok();
                             url = url.substr(location.pathname.length);
                             expect(url.substr(0, 1)).to.equal('#');
-                        } else {
-
                         }
                     }
 
