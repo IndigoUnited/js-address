@@ -83,7 +83,7 @@ define([
      * {@inheritDoc}
      */
     AddressHTML5.prototype._writeValue = function (value, replace) {
-        var path = '/' + trimSlashes.leading(this._basePath + '/') + this._encodeValue(trimSlashes(value));
+        var path = '/' + trimSlashes.leading(this._basePath + '/') + this._encodeValue(value);
 
         if (replace) {
             history.replaceState(emptyObj, emptyStr, path);

@@ -30,7 +30,7 @@ define([
     AddressHash.prototype.generateUrl = function (value, absolute) {
         // The relative URL does not need to include the location.pathname to work, so we skip it
         // All the relative URLs start with #
-        var ret = '#' + this._encodeValue(trimSlashes(value));
+        var ret = '#/' + this._encodeValue(trimSlashes(value));
 
         if (!absolute) {
             return ret;
@@ -61,7 +61,7 @@ define([
      * {@inheritDoc}
      */
     AddressHash.prototype._writeValue = function (value, replace) {
-        value = '#' + this._encodeValue(value);
+        value = '#/' + this._encodeValue(value);
 
         if (replace) {
             location.replace(value);
