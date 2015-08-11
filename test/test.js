@@ -93,7 +93,7 @@ define([
                     console.log('--------------------------');
                 }
 
-                location.hash = '#' + initialValue + '?wtf#wtf';
+                location.hash = '#' + encodeURIComponent(initialValue) + '?wtf#wtf';
 
                 address = AddressHash.getInstance();
                 run(address);
@@ -182,7 +182,7 @@ define([
                 console.log('> should be able to read the initial value with getValue()');
             }
 
-            expect(address.getValue()).to.be.equal(address instanceof AddressHash ? initialValue + '?wtf#wtf' : initialValue);
+            expect(address.decodeSegment(address.getValue())).to.be.equal(address instanceof AddressHash ? initialValue + '?wtf#wtf' : initialValue);
         });
 
         it('should change the value if setValue() is called with a new value', function () {
