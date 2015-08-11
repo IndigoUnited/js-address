@@ -30,7 +30,7 @@ define([
     AddressHash.prototype.generateUrl = function (value, absolute) {
         // The relative URL does not need to include the location.pathname to work, so we skip it
         // All the relative URLs start with #
-        var ret = '#/' + this._encodeValue(trimSlashes(value));
+        var ret = '#/' + trimSlashes(value);
 
         if (!absolute) {
             return ret;
@@ -54,38 +54,20 @@ define([
         // Trim slashes from the value
         hash = trimSlashes(hash);
 
-        return decodeURIComponent(hash);
+        return hash;
     };
 
     /**
      * {@inheritDoc}
      */
     AddressHash.prototype._writeValue = function (value, replace) {
-        value = '#/' + this._encodeValue(value);
+        value = '#/' + value;
 
         if (replace) {
             location.replace(value);
         } else {
             location.href = value;
         }
-    };
-
-    /**
-     * Encodes the passed value to be safelly used.
-     *
-     * @param  {String} value The value to be encoded
-     *
-     * @return {String} The encoded value
-     */
-    AddressHash.prototype._encodeValue = function (value) {
-        // Use encodeURI because its similar to encodeURIComponent but preserves some chars (without breaking) and prevents a bug in Safari
-        value = encodeURI(value);
-
-        // Encode the # because encodeURI does not handle it
-        // This is actually only needed in IE and Opera, but we do it in every browser
-        value = value.replace(/#/g, '%23');
-
-        return value;
     };
 
     /**

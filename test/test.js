@@ -174,7 +174,7 @@ define([
             }
 
             stack.push('c');
-            values.push(obj.newValue);
+            values.push(address.decodeSegment(obj.newValue));
         });
 
         it('should be able to read the initial value with getValue()', function () {
@@ -196,11 +196,11 @@ define([
             address.setValue('/first');
             expect(address.getValue()).to.be.equal('first');
 
-            address.setValue('#second');
-            expect(address.getValue()).to.be.equal('#second');
+            address.setValue(address.encodeSegment('#second'));
+            expect(address.decodeSegment(address.getValue())).to.be.equal('#second');
 
-            address.setValue('/#second');
-            expect(address.getValue()).to.be.equal('#second');
+            address.setValue('/' + address.encodeSegment('#second'));
+            expect(address.decodeSegment(address.getValue())).to.be.equal('#second');
         });
 
         it('should fire the internal event if setValue() is called with a new value', function (done) {
@@ -406,7 +406,6 @@ define([
             this.timeout(10000);
 
             var special,
-                expected,
                 length,
                 x;
 
@@ -416,7 +415,6 @@ define([
                 '你好', '良い', 'хорошо/'
             ];
 
-            expected = special.map(function (url) { return trimSlashes(url); });
             length = special.length;
 
             function doBack(x) {
@@ -429,7 +427,7 @@ define([
 
             function compare() {
                 setTimeout(function () {
-                    var array = append(append([], expected), expected.slice(0, -1).reverse()),
+                    var array = append(append([], special), special.slice(0, -1).reverse()),
                         tmp;
 
                     expect(values).to.eql(array);
@@ -467,7 +465,7 @@ define([
             }
 
             for (x = 0; x < length; x += 1) {
-                address.setValue(special[x]);
+                address.setValue(address.encodeSegment(special[x]));
             }
 
             length -= 1;
@@ -484,7 +482,6 @@ define([
             this.timeout(10000);
 
             var special,
-                expected,
                 length,
                 x,
                 url,
@@ -496,7 +493,6 @@ define([
                 '你好', '良い', 'хорошо/'
             ];
 
-            expected = special.map(function (url) { return trimSlashes(url); });
             length = special.length;
 
             function doBack(x) {
@@ -509,7 +505,7 @@ define([
 
             function compare() {
                 setTimeout(function () {
-                    var array = append(append([], expected), expected.slice(0, -1).reverse());
+                    var array = append(append([], special), special.slice(0, -1).reverse());
 
                     expect(values).to.eql(array);
                     if (absolute) {
@@ -534,7 +530,7 @@ define([
                 length = special.length;
 
                 for (x = 0; x < length; x += 1) {
-                    url = address.generateUrl(special[x], absolute);
+                    url = address.generateUrl(address.encodeSegment(special[x]), absolute);
 
                     if (!absolute) {
                         if (address instanceof AddressHash) {

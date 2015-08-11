@@ -103,6 +103,7 @@ define([
 
     /**
      * Returns the current address value.
+     * The returned value is not decoded, use decodeSegment to decode each segment of the value.
      *
      * @param {String} [value] A value to be used instead of the address bar value
      *
@@ -114,6 +115,8 @@ define([
 
     /**
      * Sets the address value.
+     * The value must be encoded, use encodeSegment to encode each segment of the value.
+     *
      * If the resource changed, the change event will be fired (with type internal).
      *
      * The default implementation should handle these options:
@@ -162,7 +165,33 @@ define([
     };
 
     /**
+     * Encodes a segment to be safely used in the URL itself.
+     *
+     * @param {String} [segment] The segment
+     *
+     * @return {String} The encoded segment
+     */
+    Address.prototype.encodeSegment = function (segment) {
+        // TODO: encodeURIComponent is too aggressive, consider using angular solution:
+        //       https://github.com/angular/angular.js/blob/720012eab6fef5e075a1d6876dd2e508c8e95b73/src/ngResource/resource.js#L386
+        return encodeURIComponent(segment);
+    };
+
+    /**
+     * Decodes a segment.
+     *
+     * @param {String} [segment] The encoded segment
+     *
+     * @return {String} The decoded segment
+     */
+    Address.prototype.decodeSegment = function (segment) {
+        return decodeURIComponent(segment);
+    };
+
+    /**
      * Generates an URL based on a given value.
+     * The value must be encoded, use encodeSegment to encode each segment of the value.
+     *
      * By default the generated URL will be relative unless absolute is true.
      *
      * @param {String}  value      The value.

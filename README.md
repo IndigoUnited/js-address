@@ -57,10 +57,14 @@ Fires a `enable` event.
 
 Return the current value of the address.
 
+The returned value is not decoded, use decodeSegment to decode each segment of the value.
+
 
 ### .setValue(value, [options])
 
 Set a new value into the address.
+
+The value must be encoded, use `encodeSegment` to encode each segment of the value.   
 Fires an `change` event of type `internal` if the value differs from the current one.
 
 The following options are available:
@@ -80,8 +84,20 @@ Clears the internal value and any other state.
 
 ### .generateUrl(value, [absolute])
 
-Generate an URL from a `value` to be safely used in link tags.
+Generate an URL from a `value` to be used in link tags.
+
+The value must be encoded, use encodeSegment to encode each segment of the value.   
 By default the generated URL will be relative, unless `absolute` is true.
+
+
+## .encodeSegment(segment)
+
+Encodes a segment to be safely used in the URL itself.
+
+
+## .decodeSegment(segment)
+
+Decodes a segment, returning the decoded value
 
 
 ### .on(event, fn, [context])

@@ -37,7 +37,7 @@ define([
      * {@inheritDoc}
      */
     AddressHTML5.prototype.generateUrl = function (value, absolute) {
-        var ret = '/' +  trimSlashes.leading(this._basePath + '/') + this._encodeValue(trimSlashes(value));
+        var ret = '/' +  trimSlashes.leading(this._basePath + '/') + trimSlashes(value);
 
         return absolute ? this._locationShp + ret : ret;
     };
@@ -76,14 +76,14 @@ define([
         // Trim slashes from the value
         parsed = trimSlashes(parsed);
 
-        return decodeURIComponent(parsed);
+        return parsed;
     };
 
     /**
      * {@inheritDoc}
      */
     AddressHTML5.prototype._writeValue = function (value, replace) {
-        var path = '/' + trimSlashes.leading(this._basePath + '/') + this._encodeValue(value);
+        var path = '/' + trimSlashes.leading(this._basePath + '/') + value;
 
         if (replace) {
             history.replaceState(emptyObj, emptyStr, path);
@@ -93,24 +93,6 @@ define([
             // Fix a weird Opera bug (http://my.opera.com/community/forums/topic.dml?id=1185462)
             this._baseElement.href = this._baseElement.href;
         }
-    };
-
-    /**
-     * Encodes the passed value to be safelly used.
-     *
-     * @param  {String} value The value to be encoded
-     *
-     * @return {String} The encoded value
-     */
-    AddressHTML5.prototype._encodeValue = function (value) {
-        // Use encodeURI because its similar to encodeURIComponent but preserves some chars (without breaking) and prevents a bug in Safari
-        value = encodeURI(value);
-
-        // Some chars needs to be converted separately because encodeURI ignores it
-        value = value.replace(/#/g, '%23');
-        value = value.replace(/\?/g, '%3F');
-
-        return value;
     };
 
     /**
