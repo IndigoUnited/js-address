@@ -39,7 +39,7 @@ define([
     AddressHTML5.prototype.generateUrl = function (value, absolute) {
         var ret = '/' +  trimSlashes.leading(this._basePath + '/') + trimSlashes(value);
 
-        return absolute ? this._locationShp + ret : ret;
+        return absolute ? this._analyzedLocation.scheme + this._analyzedLocation.host + ret : ret;
     };
 
     // ---------------------------------------------------------------

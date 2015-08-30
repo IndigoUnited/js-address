@@ -39,11 +39,12 @@ define([
         // handleLinks can also be a string to handle only certain links (if the function returns true for the given url, then it will be handled)
         this._options = mixIn({
             handleLinks: true,
-            basePath: location.pathname
+            basePath: location.pathname,
+            strictScheme: false
         }, options);
 
-        // Cache the location scheme + host + port
-        this._locationShp = this._analyzeUrl(location.href).shp;
+        // Cache the analyze result of the location
+        this._analyzedLocation = this._analyzeUrl(location.href);
 
         // Validate base path
         // We don't allow strange chars because they some browsers return href decoded and
@@ -216,7 +217,7 @@ define([
     // ---------------------------------------------------------------
 
     /**
-     * Analyzes the url, returning an object with its shp (scheme + host + port) and pathname.
+     * Analyzes the url, returning an object with its scheme, host and pathname.
      *
      * @param {String} url The url to parse
      *
@@ -232,7 +233,8 @@ define([
         parsedUrl = parseUrl(anchorEl.href);  // Regular expression based parser
 
         return {
-            shp: parsedUrl.protocol + parsedUrl.doubleSlash + parsedUrl.host,
+            scheme: parsedUrl.protocol + parsedUrl.doubleSlash,
+            host: parsedUrl.host,
             pathname: '/' + trimSlashes.leading(parsedUrl.pathname)
         };
     };
@@ -248,7 +250,15 @@ define([
     Address.prototype._isInternalUrl = function (url) {
         var analyzed = this._analyzeUrl(url);
 
-        return analyzed.shp === this._locationShp && analyzed.pathname.indexOf('/' + this._basePath) === 0;
+        if (this._options.strictScheme && analyzed.scheme !== this._analyzedLocation.scheme) {
+            return false;
+        }
+
+        if (analyzed.host !== this._analyzedLocation.host) {
+            return false;
+        }
+
+        return analyzed.pathname.indexOf('/' + this._basePath) === 0;
     };
 
     /**

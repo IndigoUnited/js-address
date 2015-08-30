@@ -36,7 +36,7 @@ define([
             return ret;
         }
 
-        return this._locationShp + '/' +  this._basePath + ret;
+        return this._analyzedLocation.scheme + this._analyzedLocation.host + '/' +  this._basePath + ret;
     };
 
     // ---------------------------------------------------------------

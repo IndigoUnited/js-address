@@ -36,7 +36,7 @@ Options are passed to the constructor. Available ones are:
 
 - handleLinks: true to listen to clicks in links in the DOM and handle them, false otherwise
 - basePath: the base path of the site (e.g.: `/myapp/demo/`)
-
+- strictScheme: Either to be strict when comparing protocols in URL (http vs https, etc), defaults to false
 
 
 ## API
