@@ -115,7 +115,7 @@ define([
     AddressHTML5.isCompatible = function () {
         var userAgent = navigator.userAgent.toLowerCase(),
             android = parseInt((/android (\d+)/.exec(userAgent) || [])[1], 10),
-            safari = browser.webkit && !window.chrome && parseInt(browser.version, 10);
+            safari = browser.safari && parseInt(browser.version, 10);
 
         // Android < 4 does not handle pushState correctly (http://code.google.com/p/android/issues/detail?id=17471)
         // There is quite few browsers for android besides the stock one but we disable it anyway
