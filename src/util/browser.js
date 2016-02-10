@@ -31,7 +31,7 @@ define(function () {
     // Chrome is Webkit, but Webkit is also Safari.
     if (browser.chrome) {
         browser.webkit = true;
-    } else if (browser.webkit) {
+    } else if (browser.webkit && /apple/i.test(navigator.vendor)) {
         browser.safari = true;
     }
 
